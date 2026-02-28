@@ -5,6 +5,7 @@ export interface DomainExtractionResult {
   titleText: string;
   contentText: string;
   paragraphTexts: string[];
+  paragraphElements: Element[];
   startParagraphIndex: number;
   nextChapterUrl: string | null;
 }
@@ -16,6 +17,14 @@ interface ExtractDomainReaderContentOptions {
 interface ParagraphEntry {
   element: Element;
   text: string;
+}
+
+interface ParagraphData {
+  contentText: string;
+  speechContentText: string;
+  paragraphTexts: string[];
+  paragraphElements: Element[];
+  startParagraphIndex: number;
 }
 
 function normalizeText(text: string): string {
@@ -95,17 +104,13 @@ function getReadableParagraphEntries(contentElement: Element): ParagraphEntry[] 
 function resolveParagraphData(
   contentElement: Element | null,
   startFromViewportParagraph: boolean,
-): {
-  contentText: string;
-  speechContentText: string;
-  paragraphTexts: string[];
-  startParagraphIndex: number;
-} {
+): ParagraphData {
   if (!contentElement) {
     return {
       contentText: '',
       speechContentText: '',
       paragraphTexts: [],
+      paragraphElements: [],
       startParagraphIndex: 0,
     };
   }
@@ -113,6 +118,7 @@ function resolveParagraphData(
   const paragraphEntries = getReadableParagraphEntries(contentElement);
   if (paragraphEntries.length > 0) {
     const paragraphTexts = paragraphEntries.map((entry) => entry.text);
+    const paragraphElements = paragraphEntries.map((entry) => entry.element);
     const firstFullyVisibleIndex = startFromViewportParagraph
       ? paragraphEntries.findIndex((entry) => isElementFullyVisibleInViewport(entry.element))
       : 0;
@@ -122,6 +128,7 @@ function resolveParagraphData(
       contentText: paragraphTexts.join('\n\n'),
       speechContentText: paragraphTexts.slice(startParagraphIndex).join('\n\n'),
       paragraphTexts,
+      paragraphElements,
       startParagraphIndex,
     };
   }
@@ -132,6 +139,7 @@ function resolveParagraphData(
       contentText: '',
       speechContentText: '',
       paragraphTexts: [],
+      paragraphElements: [],
       startParagraphIndex: 0,
     };
   }
@@ -140,6 +148,7 @@ function resolveParagraphData(
     contentText: fallbackText,
     speechContentText: fallbackText,
     paragraphTexts: [fallbackText],
+    paragraphElements: [],
     startParagraphIndex: 0,
   };
 }
@@ -168,6 +177,7 @@ export function extractDomainReaderContent(
     titleText,
     contentText: paragraphData.contentText,
     paragraphTexts: paragraphData.paragraphTexts,
+    paragraphElements: paragraphData.paragraphElements,
     startParagraphIndex: paragraphData.startParagraphIndex,
     nextChapterUrl: resolveNextChapterUrl(nextElement),
   };

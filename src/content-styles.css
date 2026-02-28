@@ -163,3 +163,14 @@
   justify-content: center;
   gap: 1rem;
 }
+
+.etts-current-paragraph {
+  background-color: Highlight !important;
+  color: HighlightText !important;
+  border-radius: 4px;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.etts-current-paragraph * {
+  color: inherit !important;
+}

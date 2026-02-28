@@ -32,9 +32,11 @@ let pendingNavigationTimeoutId: number | null = null;
 let pendingAutoReadStartTimeoutId: number | null = null;
 let isAutonomousNavigationInProgress = false;
 let paragraphNavigationState: ParagraphNavigationState | null = null;
+let highlightedParagraphElement: Element | null = null;
 
 interface ParagraphNavigationConfig {
   paragraphTexts: string[];
+  paragraphElements?: Element[];
   startParagraphIndex: number;
 }
 
@@ -46,6 +48,7 @@ interface ParagraphPlaybackOptions {
 
 interface ParagraphNavigationState {
   paragraphs: string[];
+  paragraphElements: Element[];
   currentParagraphIndex: number;
   playbackOptions: ParagraphPlaybackOptions;
 }
@@ -224,6 +227,39 @@ function splitTextIntoParagraphs(text: string): string[] {
   return [normalized];
 }
 
+function clearCurrentParagraphHighlight(): void {
+  if (!highlightedParagraphElement) {
+    return;
+  }
+
+  highlightedParagraphElement.classList.remove('etts-current-paragraph');
+  highlightedParagraphElement = null;
+}
+
+function highlightCurrentParagraph(): void {
+  clearCurrentParagraphHighlight();
+
+  if (!paragraphNavigationState) {
+    return;
+  }
+
+  const paragraphElement = paragraphNavigationState.paragraphElements[paragraphNavigationState.currentParagraphIndex];
+  if (!paragraphElement) {
+    return;
+  }
+
+  paragraphElement.classList.add('etts-current-paragraph');
+  highlightedParagraphElement = paragraphElement;
+
+  if (paragraphElement instanceof HTMLElement) {
+    paragraphElement.scrollIntoView({
+      behavior: 'smooth',
+      block: 'nearest',
+      inline: 'nearest',
+    });
+  }
+}
+
 function updateParagraphNavigationButtons(): void {
   if (!controlPanel) {
     return;
@@ -247,6 +283,22 @@ function updateParagraphNavigationButtons(): void {
   nextParagraphButton.disabled = !canGoNext;
 }
 
+function getCurrentParagraphText(): string | null {
+  if (!paragraphNavigationState) {
+    return null;
+  }
+
+  return paragraphNavigationState.paragraphs[paragraphNavigationState.currentParagraphIndex] ?? null;
+}
+
+function hasNextParagraph(): boolean {
+  if (!paragraphNavigationState) {
+    return false;
+  }
+
+  return paragraphNavigationState.currentParagraphIndex < paragraphNavigationState.paragraphs.length - 1;
+}
+
 function setParagraphNavigationState(text: string, options: InitTTSOptions): void {
   const providedParagraphs = (options.paragraphNavigation?.paragraphTexts || [])
     .map((paragraph) => paragraph.trim())
@@ -257,8 +309,14 @@ function setParagraphNavigationState(text: string, options: InitTTSOptions): voi
 
   if (paragraphs.length === 0) {
     paragraphNavigationState = null;
+    clearCurrentParagraphHighlight();
     return;
   }
+
+  const providedElements = options.paragraphNavigation?.paragraphElements ?? [];
+  const paragraphElements = providedParagraphs.length > 0 && providedElements.length === providedParagraphs.length
+    ? providedElements
+    : [];
 
   const requestedStartIndex = Math.round(options.paragraphNavigation?.startParagraphIndex ?? 0);
   const startParagraphIndex = Math.min(
@@ -268,6 +326,7 @@ function setParagraphNavigationState(text: string, options: InitTTSOptions): voi
 
   paragraphNavigationState = {
     paragraphs,
+    paragraphElements,
     currentParagraphIndex: startParagraphIndex,
     playbackOptions: {
       autonomousMode: options.autonomousMode,
@@ -275,6 +334,8 @@ function setParagraphNavigationState(text: string, options: InitTTSOptions): voi
       automationSettings: options.automationSettings,
     },
   };
+
+  highlightCurrentParagraph();
 }
 
 async function moveParagraph(offset: number): Promise<void> {
@@ -303,6 +364,7 @@ async function moveParagraph(offset: number): Promise<void> {
     automationSettings: paragraphNavigationState.playbackOptions.automationSettings,
     paragraphNavigation: {
       paragraphTexts: paragraphNavigationState.paragraphs,
+      paragraphElements: paragraphNavigationState.paragraphElements,
       startParagraphIndex: targetParagraphIndex,
     },
   });
@@ -359,6 +421,7 @@ function cleanup(preserveAutonomousState = false): void {
     currentTTSDeactivate = null;
   }
 
+  clearCurrentParagraphHighlight();
   paragraphNavigationState = null;
   if (!preserveAutonomousState) {
     disableAutonomousMode();
@@ -426,6 +489,7 @@ export async function initTTS(text: string, options: InitTTSOptions = { autonomo
   cleanup();
   configureAutonomousMode(options);
   setParagraphNavigationState(text, options);
+  const textToSpeak = getCurrentParagraphText() ?? text;
 
   try {
     const settings = await browser.storage.sync.get({
@@ -446,7 +510,7 @@ export async function initTTS(text: string, options: InitTTSOptions = { autonomo
       connectionTimeout: 10000,
     };
 
-    const communicate = new BrowserCommunicate(text, browserCommunicateOptions);
+    const communicate = new BrowserCommunicate(textToSpeak, browserCommunicateOptions);
 
     return new Promise((resolve, reject) => {
       const mediaSource = new MediaSource();
@@ -484,6 +548,15 @@ export async function initTTS(text: string, options: InitTTSOptions = { autonomo
         audioElement.onended = () => {
           updatePlayPauseButton();
 
+          if (hasNextParagraph()) {
+            void moveParagraph(1).catch((error) => {
+              console.error('Failed to auto-advance paragraph:', error);
+              const scheduled = scheduleAutonomousNextChapterNavigation();
+              cleanup(scheduled);
+            });
+            return;
+          }
+
           const scheduled = scheduleAutonomousNextChapterNavigation();
           cleanup(scheduled);
         };
@@ -497,7 +570,8 @@ export async function initTTS(text: string, options: InitTTSOptions = { autonomo
       if (controlPanel) {
         updatePanelContent(controlPanel, false);
       }
-        updateParagraphNavigationButtons();
+      updateParagraphNavigationButtons();
+      highlightCurrentParagraph();
 
       const appendNextChunk = () => {
         if (!isActive || !sourceBuffer || mediaSource.readyState !== 'open') {
@@ -630,6 +704,7 @@ async function startConfiguredPageRead(
     automationSettings,
     paragraphNavigation: {
       paragraphTexts: extraction.paragraphTexts,
+      paragraphElements: extraction.paragraphElements,
       startParagraphIndex: extraction.startParagraphIndex,
     },
   });
