@@ -1,193 +1,120 @@
-# 🎙️ Edge TTS Reader: Free, High-Quality Text-to-Speech Extension
+# Novel Reader TTS Extension
 
-![GitHub stars](https://img.shields.io/github/stars/travisvn/edge-tts-extension?style=social)
-![GitHub forks](https://img.shields.io/github/forks/travisvn/edge-tts-extension?style=social)
-![GitHub repo size](https://img.shields.io/github/repo-size/travisvn/edge-tts-extension)
-![GitHub language count](https://img.shields.io/github/languages/count/travisvn/edge-tts-extension)
-![GitHub top language](https://img.shields.io/github/languages/top/travisvn/edge-tts-extension)
-![GitHub last commit](https://img.shields.io/github/last-commit/travisvn/edge-tts-extension?color=red)
-[![Discord](https://img.shields.io/badge/Discord-Voice_AI_%26_TTS_Tools-blue?logo=discord&logoColor=white)](https://discord.gg/GkFbBCBqJ6)
+A browser extension for Chrome and Firefox that reads selected text, whole chapters, or text from a chosen point using Microsoft Edge Read Aloud voices over WebSocket.
 
-Edge TTS Reader brings your browsing experience to life by turning text into natural-sounding audio. Powered by Microsoft Edge's advanced Read Aloud API, this extension makes it effortless to listen to selected text or entire web pages. Whether you're multitasking, improving productivity, or just prefer listening over reading, Edge TTS Reader is your perfect companion.
+## Fork origin
 
-[View in the Chrome Web Store](https://chromewebstore.google.com/detail/edge-text-to-speech-voice/jeenjljjokaobgdbemlplaidbjfliknl)
+This project was originally forked from:
+- https://github.com/travisvn/edge-tts-extension
 
-## Why Choose Edge TTS Reader?
+The codebase has been significantly adapted for novel-reading workflows and domain-specific chapter extraction.
 
-Say goodbye to staring at long articles or struggling to absorb written information. With Edge TTS Reader, your browser transforms into a virtual assistant, delivering high-quality, lifelike audio at your convenience. Designed for professionals, students, accessibility needs, and language enthusiasts, Edge TTS Reader is lightweight, efficient, and privacy-focused.
+## What this extension does
 
-## Key Features
+- Read selected text from the context menu
+- Read the current page using configured chapter selectors
+- Read from a selected point to the end of the page
+- Start read-page from the first fully visible readable element in the viewport (including a visible title)
+- Navigate paragraph-by-paragraph during playback (previous/next controls)
+- Highlight the currently read paragraph while audio is playing
+- Support autonomous next-chapter progression with configurable delays
 
-### 🎤 High-Quality Text-to-Speech
+## Core architecture
 
-Enjoy clear, lifelike narration powered by Microsoft's Read Aloud API, customizable to suit different contexts and preferences.
+- `src/background/index.ts`
+  - Context menus and keyboard command handling
+  - Forwards actions to the active tab
+- `src/contentScript.ts`
+  - Text extraction orchestration, TTS streaming, playback control, paragraph navigation/highlighting
+- `src/utils/browserCommunicate.ts`
+  - Edge Read Aloud WebSocket protocol client and streaming parser
+- `src/options/index.tsx`
+  - Domain profile management and automation delay configuration
+- `src/popup/index.tsx`
+  - Quick controls (voice, speed, theme, read page, open configuration)
 
-### 📖 Read Selected Text
+## Requirements
 
-Highlight text, right-click, and select "Read Aloud with Edge TTS" to hear the content instantly.
+- Node.js + npm
+- Chrome or Firefox for loading unpacked builds
 
-### 🌐 Read Entire Web Pages
-
-Right-click anywhere on a page and choose "Read Entire Page Aloud with Edge TTS" for seamless audio playback of the whole page.
-
-### 🎛️ Customizable Settings
-
-- Adjust reading speed (from 0.5x to 2.0x).
-- Choose from a variety of voices to match your mood or task.
-
-### 🌓 Dark Mode Support
-
-Respect your system preferences with light, dark, and system theme options.
-
-### 🖱️ Intuitive Popup Interface
-
-Quickly control playback, select voices, and adjust settings via an easy-to-use popup menu.
-
-### 📋 Context Menu Integration
-
-Perform TTS actions directly from the right-click menu to streamline your workflow.
-
-### 🔒 Privacy-Focused
-
-Your data stays secure. Text is processed locally or through Microsoft's trusted APIs without storage or sharing.
-
----
-
-## How It Works
-
-1. **Highlight Text or Use Context Menu**
-
-   - Highlight text and select "Read Aloud with Edge TTS."
-   - Alternatively, right-click and choose "Read Entire Page Aloud."
-
-2. **Customize in the Popup**
-
-   - Open the extension popup to tweak settings like voice, speed, and theme.
-
-3. **Listen and Enjoy**
-   - Let Edge TTS Reader deliver clear, natural-sounding audio.
-
----
-
-## Perfect For:
-
-- **Professionals**: Listen to articles, emails, or reports while multitasking.
-- **Students**: Use TTS for study materials, research, or eBooks.
-- **Accessibility**: Support for users with visual impairments or reading difficulties.
-- **Language Enthusiasts**: Explore diverse voices and pronunciations.
-
----
-
-## Installation
-
-### Option 1: From Stores
-
-- Chrome: [Chrome Web Store](https://chromewebstore.google.com/detail/edge-text-to-speech-voice/jeenjljjokaobgdbemlplaidbjfliknl)
-- Firefox: [Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/edge-tts/) 🆕🔥
-
-### Option 2: Manual Installation
-
-#### For Chrome:
-
-1. Clone this repository:
-   ```bash
-   git clone https://github.com/travisvn/edge-tts-extension.git
-   ```
-2. Navigate to the directory:
-   ```bash
-   cd edge-tts-extension
-   ```
-3. Install dependencies:
-   ```bash
-   npm install
-   ```
-4. Build the Chrome extension:
-   ```bash
-   npm run build:chrome
-   ```
-5. Load the extension in Chrome:
-   - Open Chrome and go to `chrome://extensions/`.
-   - Enable **Developer mode** (toggle in the top-right corner).
-   - Click **Load unpacked** and select the `dist/chrome` folder.
-
-#### For Firefox:
-
-1. Clone this repository:
-   ```bash
-   git clone https://github.com/travisvn/edge-tts-extension.git
-   ```
-2. Navigate to the directory:
-   ```bash
-   cd edge-tts-extension
-   ```
-3. Install dependencies:
-   ```bash
-   npm install
-   ```
-4. Build the Firefox extension:
-   ```bash
-   npm run build:firefox
-   ```
-5. Load the extension in Firefox:
-   - Open Firefox and go to `about:debugging#/runtime/this-firefox`.
-   - Click **Load Temporary Add-on...** and select any file in the `dist/firefox` directory.
-   - For permanent installation, you need to sign your extension or use Firefox Developer Edition/Nightly with `xpinstall.signatures.required` set to `false` in `about:config`.
-
-## Building for Both Browsers
-
-To build the extension for both Chrome and Firefox:
+## Setup
 
 ```bash
-npm run build
+npm install
 ```
 
-This will create separate builds in `dist/chrome` and `dist/firefox` directories.
+## Development and build commands
 
----
+```bash
+npm run dev
+npm run dev:chrome
+npm run dev:firefox
 
-## Frequently Asked Questions
+npm run start
+npm run start:chrome
+npm run start:firefox
 
-### What languages and voices are supported?
+npm run build
+npm run build:chrome
+npm run build:firefox
 
-Edge TTS Reader supports a wide range of voices and languages provided by Microsoft's Read Aloud API.
+npm run package:firefox
 
-### Does this work offline?
+npm run analyze
+npm run analyze:chrome
+npm run analyze:firefox
+```
 
-An internet connection is required to process text via Microsoft's API. The extension is optimized to minimize bandwidth usage.
+Build outputs:
+- Chrome: `dist/chrome`
+- Firefox: `dist/firefox`
 
-### Is my data secure?
+## Load unpacked extension
 
-Yes! Your text is processed securely and never stored or shared.
+### Chrome
 
----
+1. Run `npm run build:chrome`
+2. Open `chrome://extensions/`
+3. Enable Developer mode
+4. Click **Load unpacked** and choose `dist/chrome`
 
-## Contributing
+### Firefox
 
-Contributions are welcome! To get started:
+1. Run `npm run build:firefox`
+2. Open `about:debugging#/runtime/this-firefox`
+3. Click **Load Temporary Add-on...** and select a file inside `dist/firefox`
 
-1. Fork this repository.
-2. Create a feature branch:
-   ```bash
-   git checkout -b feature/your-feature-name
-   ```
-3. Commit your changes:
-   ```bash
-   git commit -m "Add your feature description"
-   ```
-4. Push to your branch:
-   ```bash
-   git push origin feature/your-feature-name
-   ```
-5. Open a pull request.
+## Configuration (important for novel sites)
 
-## Feature Requests
+Open the extension options page and define domain profiles:
+- Domain
+- Title selector
+- Content selector
+- Next chapter selector
 
-For feature requests, please use the **[Discussions](https://github.com/travisvn/edge-tts-extension/discussions)** section or share your ideas on our **[Discord](https://tts.travisvn.com/discord)**. This helps us keep Issues focused on bugs and actionable tasks. Thanks for your input!
+You can also configure:
+- Delay before navigating to next chapter
+- Delay before starting TTS on the next chapter
 
----
+Without a matching domain profile, autonomous page reading will not run for that site.
 
-## Get Started Today
+## Keyboard shortcuts
 
-Transform your browsing experience with Edge TTS Reader. Click **Add to Chrome** and start listening to the web today!
+Default commands include:
+- Read selection: `Ctrl+Shift+S`
+- Read page: `Ctrl+Shift+P`
+- Read from here: `Ctrl+Shift+H`
+- Toggle play/pause: `Ctrl+Shift+Space`
 
-https://chromewebstore.google.com/detail/edge-text-to-speech-voice/jeenjljjokaobgdbemlplaidbjfliknl
+(Use browser extension shortcut settings to customize.)
+
+## Notes
+
+- Internet access is required for Edge Read Aloud synthesis endpoints.
+- Read quality depends on correct selectors for the target site.
+- `dist/` is generated output and should not be edited manually.
+
+## License
+
+AGPL-3.0-only (see `package.json`).
