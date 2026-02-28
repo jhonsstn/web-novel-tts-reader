@@ -57,20 +57,69 @@ function resolveNextChapterUrl(nextElement: Element | null): string | null {
   }
 }
 
-export function extractDomainReaderContent(profile: DomainReaderProfile): DomainExtractionResult | null {
+interface ExtractDomainReaderContentOptions {
+  startFromViewportParagraph?: boolean;
+}
+
+function isElementFullyVisibleInViewport(element: Element): boolean {
+  const rect = element.getBoundingClientRect();
+  const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+  const viewportWidth = window.innerWidth || document.documentElement.clientWidth;
+
+  return (
+    rect.top >= 0
+    && rect.left >= 0
+    && rect.bottom <= viewportHeight
+    && rect.right <= viewportWidth
+    && rect.height > 0
+    && rect.width > 0
+  );
+}
+
+function getViewportParagraphContentText(contentElement: Element): string {
+  const readableParagraphs = Array.from(contentElement.querySelectorAll('p'))
+    .map((paragraph) => ({
+      paragraph,
+      text: getElementText(paragraph),
+    }))
+    .filter((entry) => entry.text.length > 0);
+
+  if (readableParagraphs.length === 0) {
+    return '';
+  }
+
+  const firstFullyVisibleIndex = readableParagraphs.findIndex((entry) =>
+    isElementFullyVisibleInViewport(entry.paragraph)
+  );
+  const startIndex = firstFullyVisibleIndex >= 0 ? firstFullyVisibleIndex : 0;
+
+  return readableParagraphs
+    .slice(startIndex)
+    .map((entry) => entry.text)
+    .join('\n\n');
+}
+
+export function extractDomainReaderContent(
+  profile: DomainReaderProfile,
+  options: ExtractDomainReaderContentOptions = {},
+): DomainExtractionResult | null {
   const titleElement = trySelect(profile.titleSelector)
     || trySelect('.chapter-title');
   const contentElement = trySelect(profile.contentSelector);
   const nextElement = trySelect(profile.nextSelector);
 
   const titleText = getElementText(titleElement);
-  const contentText = getElementText(contentElement);
+  const contentText = contentElement
+    ? (options.startFromViewportParagraph
+      ? getViewportParagraphContentText(contentElement) || getElementText(contentElement)
+      : getElementText(contentElement))
+    : '';
 
   if (!contentText) {
     return null;
   }
 
-  const speechText = titleText
+  const speechText = !options.startFromViewportParagraph && titleText
     ? `${titleText}\n\n${contentText}`
     : contentText;
 

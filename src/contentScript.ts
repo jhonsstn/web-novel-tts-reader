@@ -454,13 +454,21 @@ export async function initTTS(text: string, options: InitTTSOptions = { autonomo
   }
 }
 
-async function startConfiguredPageRead(): Promise<void> {
+interface StartConfiguredPageReadOptions {
+  startFromViewportParagraph?: boolean;
+}
+
+async function startConfiguredPageRead(
+  options: StartConfiguredPageReadOptions = {},
+): Promise<void> {
   const profile = await getCurrentSiteProfileOrWarn();
   if (!profile) {
     return;
   }
 
-  const extraction = extractDomainReaderContent(profile);
+  const extraction = extractDomainReaderContent(profile, {
+    startFromViewportParagraph: options.startFromViewportParagraph ?? false,
+  });
   if (!extraction) {
     showProfileWarning('Configured selectors did not find readable chapter content on this page.');
     return;
@@ -540,7 +548,7 @@ async function handleIncomingMessage(request: ExtensionMessage): Promise<void> {
   }
 
   if (request.action === 'readPage') {
-    await startConfiguredPageRead();
+    await startConfiguredPageRead({ startFromViewportParagraph: true });
     return;
   }
 
@@ -569,7 +577,7 @@ window.addEventListener('message', (event) => {
   const { action, text } = event.data || {};
 
   if (action === 'triggerReadPage') {
-    void startConfiguredPageRead().catch((error) => {
+    void startConfiguredPageRead({ startFromViewportParagraph: true }).catch((error) => {
       console.error('triggerReadPage error:', error);
     });
   }
