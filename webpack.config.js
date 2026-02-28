@@ -2,7 +2,6 @@
 const path = require('path');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
-const fs = require('fs');
 
 // Determine the target browser from command line arguments
 // Default to 'chrome' if not specified
@@ -22,6 +21,7 @@ module.exports = {
     popup: './src/popup/index.tsx',
     background: './src/background/index.ts',
     contentScript: './src/contentScript.ts',
+    options: './src/options/index.tsx',
   },
   output: {
     path: path.resolve(__dirname, `dist/${targetBrowser}`),
@@ -48,6 +48,7 @@ module.exports = {
         { from: getManifestPath(), to: 'manifest.json' },
         { from: 'src/popup/index.html', to: 'popup/index.html' },
         { from: 'icons', to: 'icons' },
+        { from: 'src/options/index.html', to: 'options/index.html' },
       ],
     }),
     ...(shouldAnalyze ? [new BundleAnalyzerPlugin()] : []),

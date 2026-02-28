@@ -14,8 +14,6 @@ web-ext-artifacts
 # dot-files
 .*
 
-# markdown files
-*.md
 
 # include these
 !README.md

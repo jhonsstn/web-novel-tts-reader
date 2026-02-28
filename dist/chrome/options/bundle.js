@@ -1,10 +1,10 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
-/***/ "./node_modules/css-loader/dist/cjs.js!./node_modules/postcss-loader/dist/cjs.js!./src/popup/styles.css":
-/*!**************************************************************************************************************!*\
-  !*** ./node_modules/css-loader/dist/cjs.js!./node_modules/postcss-loader/dist/cjs.js!./src/popup/styles.css ***!
-  \**************************************************************************************************************/
+/***/ "./node_modules/css-loader/dist/cjs.js!./node_modules/postcss-loader/dist/cjs.js!./src/options/styles.css":
+/*!****************************************************************************************************************!*\
+  !*** ./node_modules/css-loader/dist/cjs.js!./node_modules/postcss-loader/dist/cjs.js!./src/options/styles.css ***!
+  \****************************************************************************************************************/
 /***/ ((module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -21,8 +21,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, `/* src/popup/styles.css */
-*, ::before, ::after {
+___CSS_LOADER_EXPORT___.push([module.id, `*, ::before, ::after {
   --tw-border-spacing-x: 0;
   --tw-border-spacing-y: 0;
   --tw-translate-x: 0;
@@ -75,6 +74,7 @@ ___CSS_LOADER_EXPORT___.push([module.id, `/* src/popup/styles.css */
   --tw-contain-paint:  ;
   --tw-contain-style:  ;
 }
+
 ::backdrop {
   --tw-border-spacing-x: 0;
   --tw-border-spacing-y: 0;
@@ -127,12 +127,13 @@ ___CSS_LOADER_EXPORT___.push([module.id, `/* src/popup/styles.css */
   --tw-contain-layout:  ;
   --tw-contain-paint:  ;
   --tw-contain-style:  ;
-}
-/* ! tailwindcss v3.4.17 | MIT License | https://tailwindcss.com */
-/*
+}/*
+! tailwindcss v3.4.17 | MIT License | https://tailwindcss.com
+*//*
 1. Prevent padding and border from affecting element width. (https://github.com/mozdevs/cssremedy/issues/4)
 2. Allow adding a border to an element by just adding a border-width. (https://github.com/tailwindcss/tailwindcss/pull/116)
 */
+
 *,
 ::before,
 ::after {
@@ -141,10 +142,12 @@ ___CSS_LOADER_EXPORT___.push([module.id, `/* src/popup/styles.css */
   border-style: solid; /* 2 */
   border-color: #e5e7eb; /* 2 */
 }
+
 ::before,
 ::after {
   --tw-content: '';
 }
+
 /*
 1. Use a consistent sensible line-height in all browsers.
 2. Prevent adjustments of font size after orientation changes in iOS.
@@ -154,6 +157,7 @@ ___CSS_LOADER_EXPORT___.push([module.id, `/* src/popup/styles.css */
 6. Use the user's configured \`sans\` font-variation-settings by default.
 7. Disable tap highlights on iOS
 */
+
 html,
 :host {
   line-height: 1.5; /* 1 */
@@ -166,34 +170,42 @@ html,
   font-variation-settings: normal; /* 6 */
   -webkit-tap-highlight-color: transparent; /* 7 */
 }
+
 /*
 1. Remove the margin in all browsers.
 2. Inherit line-height from \`html\` so users can set them as a class directly on the \`html\` element.
 */
+
 body {
   margin: 0; /* 1 */
   line-height: inherit; /* 2 */
 }
+
 /*
 1. Add the correct height in Firefox.
 2. Correct the inheritance of border color in Firefox. (https://bugzilla.mozilla.org/show_bug.cgi?id=190655)
 3. Ensure horizontal rules are visible by default.
 */
+
 hr {
   height: 0; /* 1 */
   color: inherit; /* 2 */
   border-top-width: 1px; /* 3 */
 }
+
 /*
 Add the correct text decoration in Chrome, Edge, and Safari.
 */
+
 abbr:where([title]) {
   -webkit-text-decoration: underline dotted;
           text-decoration: underline dotted;
 }
+
 /*
 Remove the default font size and weight for headings.
 */
+
 h1,
 h2,
 h3,
@@ -203,26 +215,32 @@ h6 {
   font-size: inherit;
   font-weight: inherit;
 }
+
 /*
 Reset links to optimize for opt-in styling instead of opt-out.
 */
+
 a {
   color: inherit;
   text-decoration: inherit;
 }
+
 /*
 Add the correct font weight in Edge and Safari.
 */
+
 b,
 strong {
   font-weight: bolder;
 }
+
 /*
 1. Use the user's configured \`mono\` font-family by default.
 2. Use the user's configured \`mono\` font-feature-settings by default.
 3. Use the user's configured \`mono\` font-variation-settings by default.
 4. Correct the odd \`em\` font sizing in all browsers.
 */
+
 code,
 kbd,
 samp,
@@ -232,15 +250,19 @@ pre {
   font-variation-settings: normal; /* 3 */
   font-size: 1em; /* 4 */
 }
+
 /*
 Add the correct font size in all browsers.
 */
+
 small {
   font-size: 80%;
 }
+
 /*
 Prevent \`sub\` and \`sup\` elements from affecting the line height in all browsers.
 */
+
 sub,
 sup {
   font-size: 75%;
@@ -248,27 +270,33 @@ sup {
   position: relative;
   vertical-align: baseline;
 }
+
 sub {
   bottom: -0.25em;
 }
+
 sup {
   top: -0.5em;
 }
+
 /*
 1. Remove text indentation from table contents in Chrome and Safari. (https://bugs.chromium.org/p/chromium/issues/detail?id=999088, https://bugs.webkit.org/show_bug.cgi?id=201297)
 2. Correct table border color inheritance in all Chrome and Safari. (https://bugs.chromium.org/p/chromium/issues/detail?id=935729, https://bugs.webkit.org/show_bug.cgi?id=195016)
 3. Remove gaps between table borders by default.
 */
+
 table {
   text-indent: 0; /* 1 */
   border-color: inherit; /* 2 */
   border-collapse: collapse; /* 3 */
 }
+
 /*
 1. Change the font styles in all browsers.
 2. Remove the margin in Firefox and Safari.
 3. Remove default padding in all browsers.
 */
+
 button,
 input,
 optgroup,
@@ -285,17 +313,21 @@ textarea {
   margin: 0; /* 2 */
   padding: 0; /* 3 */
 }
+
 /*
 Remove the inheritance of text transform in Edge and Firefox.
 */
+
 button,
 select {
   text-transform: none;
 }
+
 /*
 1. Correct the inability to style clickable types in iOS and Safari.
 2. Remove default button styles.
 */
+
 button,
 input:where([type='button']),
 input:where([type='reset']),
@@ -304,62 +336,80 @@ input:where([type='submit']) {
   background-color: transparent; /* 2 */
   background-image: none; /* 2 */
 }
+
 /*
 Use the modern Firefox focus style for all focusable elements.
 */
+
 :-moz-focusring {
   outline: auto;
 }
+
 /*
 Remove the additional \`:invalid\` styles in Firefox. (https://github.com/mozilla/gecko-dev/blob/2f9eacd9d3d995c937b4251a5557d95d494c9be1/layout/style/res/forms.css#L728-L737)
 */
+
 :-moz-ui-invalid {
   box-shadow: none;
 }
+
 /*
 Add the correct vertical alignment in Chrome and Firefox.
 */
+
 progress {
   vertical-align: baseline;
 }
+
 /*
 Correct the cursor style of increment and decrement buttons in Safari.
 */
+
 ::-webkit-inner-spin-button,
 ::-webkit-outer-spin-button {
   height: auto;
 }
+
 /*
 1. Correct the odd appearance in Chrome and Safari.
 2. Correct the outline style in Safari.
 */
+
 [type='search'] {
   -webkit-appearance: textfield; /* 1 */
   outline-offset: -2px; /* 2 */
 }
+
 /*
 Remove the inner padding in Chrome and Safari on macOS.
 */
+
 ::-webkit-search-decoration {
   -webkit-appearance: none;
 }
+
 /*
 1. Correct the inability to style clickable types in iOS and Safari.
 2. Change font properties to \`inherit\` in Safari.
 */
+
 ::-webkit-file-upload-button {
   -webkit-appearance: button; /* 1 */
   font: inherit; /* 2 */
 }
+
 /*
 Add the correct display in Chrome and Safari.
 */
+
 summary {
   display: list-item;
 }
+
 /*
 Removes the default spacing and border for appropriate elements.
 */
+
 blockquote,
 dl,
 dd,
@@ -375,13 +425,16 @@ p,
 pre {
   margin: 0;
 }
+
 fieldset {
   margin: 0;
   padding: 0;
 }
+
 legend {
   padding: 0;
 }
+
 ol,
 ul,
 menu {
@@ -389,49 +442,60 @@ menu {
   margin: 0;
   padding: 0;
 }
+
 /*
 Reset default styling for dialogs.
 */
 dialog {
   padding: 0;
 }
+
 /*
 Prevent resizing textareas horizontally by default.
 */
+
 textarea {
   resize: vertical;
 }
+
 /*
 1. Reset the default placeholder opacity in Firefox. (https://github.com/tailwindlabs/tailwindcss/issues/3300)
 2. Set the default placeholder color to the user's configured gray 400 color.
 */
+
 input::-moz-placeholder, textarea::-moz-placeholder {
   opacity: 1; /* 1 */
   color: #9ca3af; /* 2 */
 }
+
 input::placeholder,
 textarea::placeholder {
   opacity: 1; /* 1 */
   color: #9ca3af; /* 2 */
 }
+
 /*
 Set the default cursor for buttons.
 */
+
 button,
 [role="button"] {
   cursor: pointer;
 }
+
 /*
 Make sure disabled buttons don't get the pointer cursor.
 */
 :disabled {
   cursor: default;
 }
+
 /*
 1. Make replaced elements \`display: block\` by default. (https://github.com/mozdevs/cssremedy/issues/14)
 2. Add \`vertical-align: middle\` to align replaced elements more sensibly by default. (https://github.com/jensimmons/cssremedy/issues/14#issuecomment-634934210)
    This can trigger a poorly considered lint error in some tools but is included by design.
 */
+
 img,
 svg,
 video,
@@ -443,14 +507,17 @@ object {
   display: block; /* 1 */
   vertical-align: middle; /* 2 */
 }
+
 /*
 Constrain images and videos to the parent width and preserve their intrinsic aspect ratio. (https://github.com/mozdevs/cssremedy/issues/14)
 */
+
 img,
 video {
   max-width: 100%;
   height: auto;
 }
+
 /* Make elements with the HTML hidden attribute stay hidden by default */
 [hidden]:where(:not([hidden="until-found"])) {
   display: none;
@@ -459,26 +526,31 @@ video {
   width: 100%;
 }
 @media (min-width: 640px) {
+
   .container {
     max-width: 640px;
   }
 }
 @media (min-width: 768px) {
+
   .container {
     max-width: 768px;
   }
 }
 @media (min-width: 1024px) {
+
   .container {
     max-width: 1024px;
   }
 }
 @media (min-width: 1280px) {
+
   .container {
     max-width: 1280px;
   }
 }
 @media (min-width: 1536px) {
+
   .container {
     max-width: 1536px;
   }
@@ -616,7 +688,7 @@ video {
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity, 1));
 }
-`, "",{"version":3,"sources":["webpack://./src/popup/styles.css"],"names":[],"mappings":"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","sourcesContent":["/* src/popup/styles.css */\n@tailwind base;\n@tailwind components;\n@tailwind utilities;\n"],"sourceRoot":""}]);
+`, "",{"version":3,"sources":["webpack://./src/options/styles.css"],"names":[],"mappings":"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","sourcesContent":["@tailwind base;\n@tailwind components;\n@tailwind utilities;\n"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -741,254 +813,6 @@ module.exports = function (item) {
   }
   return [content].join("\n");
 };
-
-/***/ }),
-
-/***/ "./node_modules/lucide-react/dist/esm/Icon.js":
-/*!****************************************************!*\
-  !*** ./node_modules/lucide-react/dist/esm/Icon.js ***!
-  \****************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ Icon)
-/* harmony export */ });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _defaultAttributes_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./defaultAttributes.js */ "./node_modules/lucide-react/dist/esm/defaultAttributes.js");
-/* harmony import */ var _shared_src_utils_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./shared/src/utils.js */ "./node_modules/lucide-react/dist/esm/shared/src/utils.js");
-/**
- * @license lucide-react v0.483.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-
-
-
-
-
-const Icon = (0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(
-  ({
-    color = "currentColor",
-    size = 24,
-    strokeWidth = 2,
-    absoluteStrokeWidth,
-    className = "",
-    children,
-    iconNode,
-    ...rest
-  }, ref) => {
-    return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(
-      "svg",
-      {
-        ref,
-        ..._defaultAttributes_js__WEBPACK_IMPORTED_MODULE_1__["default"],
-        width: size,
-        height: size,
-        stroke: color,
-        strokeWidth: absoluteStrokeWidth ? Number(strokeWidth) * 24 / Number(size) : strokeWidth,
-        className: (0,_shared_src_utils_js__WEBPACK_IMPORTED_MODULE_2__.mergeClasses)("lucide", className),
-        ...rest
-      },
-      [
-        ...iconNode.map(([tag, attrs]) => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(tag, attrs)),
-        ...Array.isArray(children) ? children : [children]
-      ]
-    );
-  }
-);
-
-
-//# sourceMappingURL=Icon.js.map
-
-
-/***/ }),
-
-/***/ "./node_modules/lucide-react/dist/esm/createLucideIcon.js":
-/*!****************************************************************!*\
-  !*** ./node_modules/lucide-react/dist/esm/createLucideIcon.js ***!
-  \****************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ createLucideIcon)
-/* harmony export */ });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _shared_src_utils_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./shared/src/utils.js */ "./node_modules/lucide-react/dist/esm/shared/src/utils.js");
-/* harmony import */ var _Icon_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Icon.js */ "./node_modules/lucide-react/dist/esm/Icon.js");
-/**
- * @license lucide-react v0.483.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-
-
-
-
-
-const createLucideIcon = (iconName, iconNode) => {
-  const Component = (0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(
-    ({ className, ...props }, ref) => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Icon_js__WEBPACK_IMPORTED_MODULE_2__["default"], {
-      ref,
-      iconNode,
-      className: (0,_shared_src_utils_js__WEBPACK_IMPORTED_MODULE_1__.mergeClasses)(`lucide-${(0,_shared_src_utils_js__WEBPACK_IMPORTED_MODULE_1__.toKebabCase)(iconName)}`, className),
-      ...props
-    })
-  );
-  Component.displayName = `${iconName}`;
-  return Component;
-};
-
-
-//# sourceMappingURL=createLucideIcon.js.map
-
-
-/***/ }),
-
-/***/ "./node_modules/lucide-react/dist/esm/defaultAttributes.js":
-/*!*****************************************************************!*\
-  !*** ./node_modules/lucide-react/dist/esm/defaultAttributes.js ***!
-  \*****************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ defaultAttributes)
-/* harmony export */ });
-/**
- * @license lucide-react v0.483.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-
-var defaultAttributes = {
-  xmlns: "http://www.w3.org/2000/svg",
-  width: 24,
-  height: 24,
-  viewBox: "0 0 24 24",
-  fill: "none",
-  stroke: "currentColor",
-  strokeWidth: 2,
-  strokeLinecap: "round",
-  strokeLinejoin: "round"
-};
-
-
-//# sourceMappingURL=defaultAttributes.js.map
-
-
-/***/ }),
-
-/***/ "./node_modules/lucide-react/dist/esm/icons/moon.js":
-/*!**********************************************************!*\
-  !*** ./node_modules/lucide-react/dist/esm/icons/moon.js ***!
-  \**********************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   __iconNode: () => (/* binding */ __iconNode),
-/* harmony export */   "default": () => (/* binding */ Moon)
-/* harmony export */ });
-/* harmony import */ var _createLucideIcon_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../createLucideIcon.js */ "./node_modules/lucide-react/dist/esm/createLucideIcon.js");
-/**
- * @license lucide-react v0.483.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-
-
-
-const __iconNode = [
-  ["path", { d: "M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z", key: "a7tn18" }]
-];
-const Moon = (0,_createLucideIcon_js__WEBPACK_IMPORTED_MODULE_0__["default"])("Moon", __iconNode);
-
-
-//# sourceMappingURL=moon.js.map
-
-
-/***/ }),
-
-/***/ "./node_modules/lucide-react/dist/esm/icons/sun.js":
-/*!*********************************************************!*\
-  !*** ./node_modules/lucide-react/dist/esm/icons/sun.js ***!
-  \*********************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   __iconNode: () => (/* binding */ __iconNode),
-/* harmony export */   "default": () => (/* binding */ Sun)
-/* harmony export */ });
-/* harmony import */ var _createLucideIcon_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../createLucideIcon.js */ "./node_modules/lucide-react/dist/esm/createLucideIcon.js");
-/**
- * @license lucide-react v0.483.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-
-
-
-const __iconNode = [
-  ["circle", { cx: "12", cy: "12", r: "4", key: "4exip2" }],
-  ["path", { d: "M12 2v2", key: "tus03m" }],
-  ["path", { d: "M12 20v2", key: "1lh1kg" }],
-  ["path", { d: "m4.93 4.93 1.41 1.41", key: "149t6j" }],
-  ["path", { d: "m17.66 17.66 1.41 1.41", key: "ptbguv" }],
-  ["path", { d: "M2 12h2", key: "1t8f8n" }],
-  ["path", { d: "M20 12h2", key: "1q8mjw" }],
-  ["path", { d: "m6.34 17.66-1.41 1.41", key: "1m8zz5" }],
-  ["path", { d: "m19.07 4.93-1.41 1.41", key: "1shlcs" }]
-];
-const Sun = (0,_createLucideIcon_js__WEBPACK_IMPORTED_MODULE_0__["default"])("Sun", __iconNode);
-
-
-//# sourceMappingURL=sun.js.map
-
-
-/***/ }),
-
-/***/ "./node_modules/lucide-react/dist/esm/shared/src/utils.js":
-/*!****************************************************************!*\
-  !*** ./node_modules/lucide-react/dist/esm/shared/src/utils.js ***!
-  \****************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   mergeClasses: () => (/* binding */ mergeClasses),
-/* harmony export */   toKebabCase: () => (/* binding */ toKebabCase)
-/* harmony export */ });
-/**
- * @license lucide-react v0.483.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-
-const toKebabCase = (string) => string.replace(/([a-z0-9])([A-Z])/g, "$1-$2").toLowerCase();
-const mergeClasses = (...classes) => classes.filter((className, index, array) => {
-  return Boolean(className) && className.trim() !== "" && array.indexOf(className) === index;
-}).join(" ").trim();
-
-
-//# sourceMappingURL=utils.js.map
-
 
 /***/ }),
 
@@ -35930,10 +35754,10 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
 /***/ }),
 
-/***/ "./src/popup/styles.css":
-/*!******************************!*\
-  !*** ./src/popup/styles.css ***!
-  \******************************/
+/***/ "./src/options/styles.css":
+/*!********************************!*\
+  !*** ./src/options/styles.css ***!
+  \********************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -35953,7 +35777,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4__);
 /* harmony import */ var _node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/styleTagTransform.js */ "./node_modules/style-loader/dist/runtime/styleTagTransform.js");
 /* harmony import */ var _node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var _node_modules_css_loader_dist_cjs_js_node_modules_postcss_loader_dist_cjs_js_styles_css__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! !!../../node_modules/css-loader/dist/cjs.js!../../node_modules/postcss-loader/dist/cjs.js!./styles.css */ "./node_modules/css-loader/dist/cjs.js!./node_modules/postcss-loader/dist/cjs.js!./src/popup/styles.css");
+/* harmony import */ var _node_modules_css_loader_dist_cjs_js_node_modules_postcss_loader_dist_cjs_js_styles_css__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! !!../../node_modules/css-loader/dist/cjs.js!../../node_modules/postcss-loader/dist/cjs.js!./styles.css */ "./node_modules/css-loader/dist/cjs.js!./node_modules/postcss-loader/dist/cjs.js!./src/options/styles.css");
 
       
       
@@ -35979,6 +35803,174 @@ var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js
 
 
        /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_css_loader_dist_cjs_js_node_modules_postcss_loader_dist_cjs_js_styles_css__WEBPACK_IMPORTED_MODULE_6__["default"] && _node_modules_css_loader_dist_cjs_js_node_modules_postcss_loader_dist_cjs_js_styles_css__WEBPACK_IMPORTED_MODULE_6__["default"].locals ? _node_modules_css_loader_dist_cjs_js_node_modules_postcss_loader_dist_cjs_js_styles_css__WEBPACK_IMPORTED_MODULE_6__["default"].locals : undefined);
+
+
+/***/ }),
+
+/***/ "./src/utils/domainReaderProfiles.ts":
+/*!*******************************************!*\
+  !*** ./src/utils/domainReaderProfiles.ts ***!
+  \*******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   DEFAULT_AUTOMATION_SETTINGS: () => (/* binding */ DEFAULT_AUTOMATION_SETTINGS),
+/* harmony export */   DEFAULT_DOMAIN_READER_PROFILES: () => (/* binding */ DEFAULT_DOMAIN_READER_PROFILES),
+/* harmony export */   ensureDefaultReaderProfiles: () => (/* binding */ ensureDefaultReaderProfiles),
+/* harmony export */   getDomainReaderProfiles: () => (/* binding */ getDomainReaderProfiles),
+/* harmony export */   getMatchingDomainProfile: () => (/* binding */ getMatchingDomainProfile),
+/* harmony export */   getReaderAutomationSettings: () => (/* binding */ getReaderAutomationSettings),
+/* harmony export */   isValidDomainReaderProfile: () => (/* binding */ isValidDomainReaderProfile),
+/* harmony export */   normalizeDomainInput: () => (/* binding */ normalizeDomainInput),
+/* harmony export */   normalizeHostname: () => (/* binding */ normalizeHostname),
+/* harmony export */   sanitizeDomainReaderProfile: () => (/* binding */ sanitizeDomainReaderProfile),
+/* harmony export */   saveDomainReaderProfiles: () => (/* binding */ saveDomainReaderProfiles),
+/* harmony export */   saveReaderAutomationSettings: () => (/* binding */ saveReaderAutomationSettings)
+/* harmony export */ });
+/* harmony import */ var webextension_polyfill__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! webextension-polyfill */ "./node_modules/webextension-polyfill/dist/browser-polyfill.js");
+/* harmony import */ var webextension_polyfill__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(webextension_polyfill__WEBPACK_IMPORTED_MODULE_0__);
+var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+
+const DOMAIN_READER_PROFILES_KEY = 'domainReaderProfiles';
+const READER_AUTOMATION_SETTINGS_KEY = 'readerAutomationSettings';
+const DEFAULT_AUTOMATION_SETTINGS = {
+    nextNavigationDelayMs: 1000,
+    nextReadStartDelayMs: 1000,
+};
+const DEFAULT_DOMAIN_READER_PROFILES = [
+    {
+        domain: 'allnovel.org',
+        titleSelector: '.chapter-title .chapter-text',
+        contentSelector: '#chapter-content',
+        nextSelector: '#next_chap',
+    },
+];
+function toDelayMs(value, fallback) {
+    if (typeof value !== 'number' || Number.isNaN(value)) {
+        return fallback;
+    }
+    const rounded = Math.round(value);
+    return rounded < 0 ? 0 : rounded;
+}
+function normalizeDomainInput(input) {
+    const trimmed = input.trim().toLowerCase();
+    if (!trimmed) {
+        return '';
+    }
+    const withProtocol = /^https?:\/\//.test(trimmed) ? trimmed : `https://${trimmed}`;
+    try {
+        const hostname = new URL(withProtocol).hostname.toLowerCase();
+        return normalizeHostname(hostname);
+    }
+    catch (_a) {
+        return '';
+    }
+}
+function normalizeHostname(hostname) {
+    return hostname
+        .trim()
+        .toLowerCase()
+        .replace(/^www\./, '')
+        .replace(/\.+$/, '');
+}
+function sanitizeDomainReaderProfile(profile) {
+    return {
+        domain: normalizeDomainInput(profile.domain),
+        titleSelector: profile.titleSelector.trim(),
+        contentSelector: profile.contentSelector.trim(),
+        nextSelector: profile.nextSelector.trim(),
+    };
+}
+function isValidDomainReaderProfile(profile) {
+    return Boolean(profile.domain
+        && profile.titleSelector
+        && profile.contentSelector
+        && profile.nextSelector);
+}
+function ensureDefaultReaderProfiles() {
+    return __awaiter(this, void 0, void 0, function* () {
+        const result = yield webextension_polyfill__WEBPACK_IMPORTED_MODULE_0___default().storage.sync.get(DOMAIN_READER_PROFILES_KEY);
+        const existing = result[DOMAIN_READER_PROFILES_KEY];
+        if (Array.isArray(existing)) {
+            return existing
+                .map(sanitizeDomainReaderProfile)
+                .filter(isValidDomainReaderProfile);
+        }
+        yield webextension_polyfill__WEBPACK_IMPORTED_MODULE_0___default().storage.sync.set({
+            [DOMAIN_READER_PROFILES_KEY]: DEFAULT_DOMAIN_READER_PROFILES,
+        });
+        return DEFAULT_DOMAIN_READER_PROFILES;
+    });
+}
+function getDomainReaderProfiles() {
+    return __awaiter(this, void 0, void 0, function* () {
+        const profiles = yield ensureDefaultReaderProfiles();
+        return profiles
+            .map(sanitizeDomainReaderProfile)
+            .filter(isValidDomainReaderProfile);
+    });
+}
+function saveDomainReaderProfiles(profiles) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const cleanedProfiles = profiles
+            .map(sanitizeDomainReaderProfile)
+            .filter(isValidDomainReaderProfile);
+        yield webextension_polyfill__WEBPACK_IMPORTED_MODULE_0___default().storage.sync.set({
+            [DOMAIN_READER_PROFILES_KEY]: cleanedProfiles,
+        });
+    });
+}
+function getReaderAutomationSettings() {
+    return __awaiter(this, void 0, void 0, function* () {
+        const result = yield webextension_polyfill__WEBPACK_IMPORTED_MODULE_0___default().storage.sync.get(READER_AUTOMATION_SETTINGS_KEY);
+        const stored = result[READER_AUTOMATION_SETTINGS_KEY];
+        if (!stored || typeof stored !== 'object') {
+            return DEFAULT_AUTOMATION_SETTINGS;
+        }
+        return {
+            nextNavigationDelayMs: toDelayMs(stored.nextNavigationDelayMs, DEFAULT_AUTOMATION_SETTINGS.nextNavigationDelayMs),
+            nextReadStartDelayMs: toDelayMs(stored.nextReadStartDelayMs, DEFAULT_AUTOMATION_SETTINGS.nextReadStartDelayMs),
+        };
+    });
+}
+function saveReaderAutomationSettings(settings) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const normalizedSettings = {
+            nextNavigationDelayMs: toDelayMs(settings.nextNavigationDelayMs, DEFAULT_AUTOMATION_SETTINGS.nextNavigationDelayMs),
+            nextReadStartDelayMs: toDelayMs(settings.nextReadStartDelayMs, DEFAULT_AUTOMATION_SETTINGS.nextReadStartDelayMs),
+        };
+        yield webextension_polyfill__WEBPACK_IMPORTED_MODULE_0___default().storage.sync.set({
+            [READER_AUTOMATION_SETTINGS_KEY]: normalizedSettings,
+        });
+    });
+}
+function getMatchingDomainProfile(hostname, profiles) {
+    const normalizedHostname = normalizeHostname(hostname);
+    if (!normalizedHostname) {
+        return null;
+    }
+    const sortedProfiles = [...profiles]
+        .map(sanitizeDomainReaderProfile)
+        .filter(isValidDomainReaderProfile)
+        .sort((a, b) => b.domain.length - a.domain.length);
+    for (const profile of sortedProfiles) {
+        if (normalizedHostname === profile.domain
+            || normalizedHostname.endsWith(`.${profile.domain}`)) {
+            return profile;
+        }
+    }
+    return null;
+}
 
 
 /***/ })
@@ -36072,18 +36064,17 @@ var __webpack_exports__ = {};
 // This entry needs to be wrapped in an IIFE because it needs to be in strict mode.
 (() => {
 "use strict";
-/*!*****************************!*\
-  !*** ./src/popup/index.tsx ***!
-  \*****************************/
+/*!*******************************!*\
+  !*** ./src/options/index.tsx ***!
+  \*******************************/
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_dom_client__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom/client */ "./node_modules/react-dom/client.js");
 /* harmony import */ var webextension_polyfill__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! webextension-polyfill */ "./node_modules/webextension-polyfill/dist/browser-polyfill.js");
 /* harmony import */ var webextension_polyfill__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(webextension_polyfill__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _styles_css__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./styles.css */ "./src/popup/styles.css");
-/* harmony import */ var lucide_react__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! lucide-react */ "./node_modules/lucide-react/dist/esm/icons/moon.js");
-/* harmony import */ var lucide_react__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! lucide-react */ "./node_modules/lucide-react/dist/esm/icons/sun.js");
+/* harmony import */ var _styles_css__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./styles.css */ "./src/options/styles.css");
+/* harmony import */ var _utils_domainReaderProfiles__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../utils/domainReaderProfiles */ "./src/utils/domainReaderProfiles.ts");
 var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -36093,136 +36084,194 @@ var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _argume
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-// src/popup/index.tsx
 
 
 
 
 
-// Top voices to be displayed in the dropdown
-const TOP_VOICES = [
-    'en-US-AndrewNeural',
-    'en-US-AriaNeural',
-    'en-US-AvaNeural',
-    'en-US-ChristopherNeural',
-    'en-US-SteffanNeural',
-    'en-IE-ConnorNeural',
-    'en-GB-RyanNeural',
-    'en-GB-SoniaNeural',
-    'en-AU-NatashaNeural',
-    'en-AU-WilliamNeural',
-];
-function Popup() {
-    const voices = TOP_VOICES;
-    const [selectedVoice, setSelectedVoice] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)('en-US-ChristopherNeural');
-    const [customVoice, setCustomVoice] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)('');
-    const [speed, setSpeed] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(1.2);
-    const [darkMode, setDarkMode] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
+const EMPTY_PROFILE = {
+    domain: '',
+    titleSelector: '',
+    contentSelector: '',
+    nextSelector: '',
+};
+function isValidSelectorSyntax(selector) {
+    try {
+        document.createDocumentFragment().querySelector(selector);
+        return true;
+    }
+    catch (_a) {
+        return false;
+    }
+}
+function validateProfiles(profiles) {
+    const seenDomains = new Set();
+    for (let i = 0; i < profiles.length; i += 1) {
+        const profile = profiles[i];
+        const profileIndex = i + 1;
+        if (!profile.domain.trim()) {
+            return `Profile ${profileIndex}: domain is required.`;
+        }
+        const normalizedDomain = (0,_utils_domainReaderProfiles__WEBPACK_IMPORTED_MODULE_4__.normalizeDomainInput)(profile.domain);
+        if (!normalizedDomain) {
+            return `Profile ${profileIndex}: domain is invalid.`;
+        }
+        if (seenDomains.has(normalizedDomain)) {
+            return `Duplicate domain profile: ${normalizedDomain}`;
+        }
+        seenDomains.add(normalizedDomain);
+        if (!profile.titleSelector.trim() || !profile.contentSelector.trim() || !profile.nextSelector.trim()) {
+            return `Profile ${profileIndex}: all selectors are required.`;
+        }
+        if (!isValidSelectorSyntax(profile.titleSelector.trim())) {
+            return `Profile ${profileIndex}: title selector has invalid CSS syntax.`;
+        }
+        if (!isValidSelectorSyntax(profile.contentSelector.trim())) {
+            return `Profile ${profileIndex}: content selector has invalid CSS syntax.`;
+        }
+        if (!isValidSelectorSyntax(profile.nextSelector.trim())) {
+            return `Profile ${profileIndex}: next selector has invalid CSS syntax.`;
+        }
+    }
+    return null;
+}
+function OptionsPage() {
+    const [profiles, setProfiles] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]);
+    const [navigationDelaySeconds, setNavigationDelaySeconds] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)('1');
+    const [readStartDelaySeconds, setReadStartDelaySeconds] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)('1');
+    const [saveState, setSaveState] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)({ type: 'idle', message: '' });
+    const [isLoading, setIsLoading] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(true);
     (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
-        // Load saved settings
-        webextension_polyfill__WEBPACK_IMPORTED_MODULE_2___default().storage.sync.get(['voiceName', 'speed', 'customVoice', 'darkMode']).then((result) => {
-            if (result.voiceName) {
-                setSelectedVoice(result.voiceName);
-            }
-            if (result.speed) {
-                setSpeed(result.speed);
-            }
-            if (result.customVoice) {
-                setCustomVoice(result.customVoice);
-            }
-            if (result.darkMode !== undefined) {
-                setDarkMode(result.darkMode);
-                document.documentElement.classList.toggle('dark', result.darkMode);
-            }
+        (() => __awaiter(this, void 0, void 0, function* () {
+            const [{ darkMode }, storedProfiles, settings] = yield Promise.all([
+                webextension_polyfill__WEBPACK_IMPORTED_MODULE_2___default().storage.sync.get({ darkMode: false }),
+                (0,_utils_domainReaderProfiles__WEBPACK_IMPORTED_MODULE_4__.getDomainReaderProfiles)(),
+                (0,_utils_domainReaderProfiles__WEBPACK_IMPORTED_MODULE_4__.getReaderAutomationSettings)(),
+            ]);
+            document.documentElement.classList.toggle('dark', Boolean(darkMode));
+            setProfiles(storedProfiles);
+            setNavigationDelaySeconds(String(settings.nextNavigationDelayMs / 1000));
+            setReadStartDelaySeconds(String(settings.nextReadStartDelayMs / 1000));
+            setIsLoading(false);
+        }))().catch((error) => {
+            console.error('Failed to load options:', error);
+            setSaveState({
+                type: 'error',
+                message: 'Failed to load configuration data.',
+            });
+            setIsLoading(false);
         });
     }, []);
-    const handleVoiceChange = (voice) => {
-        setSelectedVoice(voice);
-        webextension_polyfill__WEBPACK_IMPORTED_MODULE_2___default().storage.sync.set({ voiceName: voice });
-    };
-    const handleCustomVoiceChange = (customVoice) => {
-        setCustomVoice(customVoice);
-        webextension_polyfill__WEBPACK_IMPORTED_MODULE_2___default().storage.sync.set({ customVoice: customVoice });
-    };
-    const handleSpeedChange = (newSpeed) => {
-        setSpeed(newSpeed);
-        webextension_polyfill__WEBPACK_IMPORTED_MODULE_2___default().storage.sync.set({ speed: newSpeed });
-    };
-    const handleDarkModeToggle = () => {
-        const newDarkMode = !darkMode;
-        setDarkMode(newDarkMode);
-        document.documentElement.classList.toggle('dark', newDarkMode);
-        webextension_polyfill__WEBPACK_IMPORTED_MODULE_2___default().storage.sync.set({ darkMode: newDarkMode });
-    };
-    const handlePlayClick = () => __awaiter(this, void 0, void 0, function* () {
-        try {
-            const tabs = yield webextension_polyfill__WEBPACK_IMPORTED_MODULE_2___default().tabs.query({ active: true, currentWindow: true });
-            const tab = tabs[0];
-            if (!(tab === null || tab === void 0 ? void 0 : tab.id)) {
-                console.error('No active tab found');
-                return;
+    const hasProfiles = (0,react__WEBPACK_IMPORTED_MODULE_0__.useMemo)(() => profiles.length > 0, [profiles]);
+    const updateProfileField = (index, key, value) => {
+        setProfiles((current) => current.map((profile, profileIndex) => {
+            if (profileIndex !== index) {
+                return profile;
             }
-            yield webextension_polyfill__WEBPACK_IMPORTED_MODULE_2___default().tabs.sendMessage(tab.id, {
-                action: 'readPage',
+            return Object.assign(Object.assign({}, profile), { [key]: value });
+        }));
+    };
+    const addProfile = () => {
+        setProfiles((current) => [...current, Object.assign({}, EMPTY_PROFILE)]);
+    };
+    const removeProfile = (index) => {
+        setProfiles((current) => current.filter((_, profileIndex) => profileIndex !== index));
+    };
+    const saveProfiles = () => __awaiter(this, void 0, void 0, function* () {
+        const validationError = validateProfiles(profiles);
+        if (validationError) {
+            setSaveState({ type: 'error', message: validationError });
+            return;
+        }
+        try {
+            yield (0,_utils_domainReaderProfiles__WEBPACK_IMPORTED_MODULE_4__.saveDomainReaderProfiles)(profiles);
+            const refreshedProfiles = yield (0,_utils_domainReaderProfiles__WEBPACK_IMPORTED_MODULE_4__.getDomainReaderProfiles)();
+            setProfiles(refreshedProfiles);
+            setSaveState({ type: 'success', message: 'Domain profiles saved.' });
+        }
+        catch (error) {
+            console.error('Failed to save profiles:', error);
+            setSaveState({ type: 'error', message: 'Failed to save domain profiles.' });
+        }
+    });
+    const saveAutomationSettings = () => __awaiter(this, void 0, void 0, function* () {
+        const parsedNavigationDelay = Number(navigationDelaySeconds);
+        const parsedReadStartDelay = Number(readStartDelaySeconds);
+        if (Number.isNaN(parsedNavigationDelay) || parsedNavigationDelay < 0) {
+            setSaveState({ type: 'error', message: 'Navigation delay must be a non-negative number.' });
+            return;
+        }
+        if (Number.isNaN(parsedReadStartDelay) || parsedReadStartDelay < 0) {
+            setSaveState({ type: 'error', message: 'Read-start delay must be a non-negative number.' });
+            return;
+        }
+        try {
+            yield (0,_utils_domainReaderProfiles__WEBPACK_IMPORTED_MODULE_4__.saveReaderAutomationSettings)({
+                nextNavigationDelayMs: Math.round(parsedNavigationDelay * 1000),
+                nextReadStartDelayMs: Math.round(parsedReadStartDelay * 1000),
             });
+            setSaveState({ type: 'success', message: 'Automation delays saved.' });
         }
         catch (error) {
-            console.error('Error sending readPage message:', error);
-            try {
-                const tabs = yield webextension_polyfill__WEBPACK_IMPORTED_MODULE_2___default().tabs.query({ active: true, currentWindow: true });
-                const tab = tabs[0];
-                if (!(tab === null || tab === void 0 ? void 0 : tab.id)) {
-                    return;
-                }
-                yield webextension_polyfill__WEBPACK_IMPORTED_MODULE_2___default().scripting.executeScript({
-                    target: { tabId: tab.id },
-                    func: () => {
-                        window.postMessage({ action: 'triggerReadPage' }, '*');
-                    },
-                });
-            }
-            catch (fallbackError) {
-                console.error('Fallback readPage trigger failed:', fallbackError);
-            }
+            console.error('Failed to save automation settings:', error);
+            setSaveState({ type: 'error', message: 'Failed to save automation delay settings.' });
         }
     });
-    const handleOpenConfiguration = () => __awaiter(this, void 0, void 0, function* () {
-        try {
-            yield webextension_polyfill__WEBPACK_IMPORTED_MODULE_2___default().runtime.openOptionsPage();
-        }
-        catch (error) {
-            console.error('Error opening options page:', error);
-        }
-    });
-    return (react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { className: "p-4 w-80 bg-white dark:bg-gray-800 dark:text-white transition-colors" },
-        react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { className: "w-8 h-8 fixed top-2 right-0 cursor-pointer", onClick: () => handleDarkModeToggle() }, darkMode ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(lucide_react__WEBPACK_IMPORTED_MODULE_4__["default"], null) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement(lucide_react__WEBPACK_IMPORTED_MODULE_5__["default"], null)),
-        react__WEBPACK_IMPORTED_MODULE_0___default().createElement("h1", { className: "text-xl font-bold select-none" }, "Edge TTS Extension"),
-        react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { className: "mt-4" },
-            react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", { className: "block" }, "Select Voice:"),
-            react__WEBPACK_IMPORTED_MODULE_0___default().createElement("select", { className: "w-full mt-1 p-2 border rounded dark:bg-slate-700 dark:border-slate-500 outline-none ring-0", value: selectedVoice, 
-                // onChange={(e) => setSelectedVoice(e.target.value)}
-                onChange: (e) => handleVoiceChange(e.target.value) }, voices.map((voice) => (react__WEBPACK_IMPORTED_MODULE_0___default().createElement("option", { key: voice, value: voice }, voice)))),
-            react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", { className: "block mt-4" }, "Or enter custom voice:"),
-            react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", { type: "text", className: "w-full mt-1 p-2 border rounded dark:bg-slate-700 dark:border-slate-500 outline-none ring-0", placeholder: "Custom voice name", value: customVoice, onChange: (e) => handleCustomVoiceChange(e.target.value) })),
-        react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { className: 'text-center mt-4 text-base font-light' },
-            "Sample voices at",
-            ' ',
-            react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", { href: 'https://tts.travisvn.com', target: '_blank', className: 'underline' }, "tts.travisvn.com")),
-        react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { className: "mt-4" },
-            react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", { className: "block" },
-                "Speed: ",
-                speed,
-                "x"),
-            react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", { type: "range", min: "0.5", max: "2.0", step: "0.1", value: speed, 
-                // onChange={(e) => setSpeed(parseFloat(e.target.value))}
-                onChange: (e) => handleSpeedChange(parseFloat(e.target.value)), className: "w-full" })),
-        react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { className: "mt-4 space-y-2" },
-            react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", { onClick: () => handlePlayClick(), className: "w-full px-4 py-2 bg-blue-500 text-white rounded" }, "Read current page aloud"),
-            react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", { onClick: () => handleOpenConfiguration(), className: "w-full px-4 py-2 bg-slate-600 text-white rounded" }, "Open reader configuration"))));
+    if (isLoading) {
+        return (react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { className: "min-h-screen p-6 text-slate-900 dark:text-slate-100" }, "Loading configuration..."));
+    }
+    return (react__WEBPACK_IMPORTED_MODULE_0___default().createElement("main", { className: "min-h-screen p-6 text-slate-900 dark:bg-slate-900 dark:text-slate-100" },
+        react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { className: "mx-auto max-w-4xl space-y-6" },
+            react__WEBPACK_IMPORTED_MODULE_0___default().createElement("header", null,
+                react__WEBPACK_IMPORTED_MODULE_0___default().createElement("h1", { className: "text-2xl font-bold" }, "Web Novel Reader Configuration"),
+                react__WEBPACK_IMPORTED_MODULE_0___default().createElement("p", { className: "mt-1 text-sm text-slate-600 dark:text-slate-300" }, "Reading is restricted to domains configured here. Matching applies to each base domain and its subdomains.")),
+            react__WEBPACK_IMPORTED_MODULE_0___default().createElement("section", { className: "rounded border border-slate-300 bg-white p-4 dark:border-slate-700 dark:bg-slate-800" },
+                react__WEBPACK_IMPORTED_MODULE_0___default().createElement("h2", { className: "text-lg font-semibold" }, "Autonomous Progression Delays"),
+                react__WEBPACK_IMPORTED_MODULE_0___default().createElement("p", { className: "mb-4 mt-1 text-sm text-slate-600 dark:text-slate-300" },
+                    "Default: ",
+                    _utils_domainReaderProfiles__WEBPACK_IMPORTED_MODULE_4__.DEFAULT_AUTOMATION_SETTINGS.nextNavigationDelayMs / 1000,
+                    "s navigation delay and ",
+                    _utils_domainReaderProfiles__WEBPACK_IMPORTED_MODULE_4__.DEFAULT_AUTOMATION_SETTINGS.nextReadStartDelayMs / 1000,
+                    "s read-start delay."),
+                react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { className: "grid gap-4 sm:grid-cols-2" },
+                    react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", { className: "text-sm font-medium" },
+                        "Delay before navigating to next chapter (seconds)",
+                        react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", { type: "number", min: "0", step: "0.1", value: navigationDelaySeconds, onChange: (event) => setNavigationDelaySeconds(event.target.value), className: "mt-1 w-full rounded border border-slate-300 p-2 text-slate-900 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" })),
+                    react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", { className: "text-sm font-medium" },
+                        "Delay before starting reading on next page (seconds)",
+                        react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", { type: "number", min: "0", step: "0.1", value: readStartDelaySeconds, onChange: (event) => setReadStartDelaySeconds(event.target.value), className: "mt-1 w-full rounded border border-slate-300 p-2 text-slate-900 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" }))),
+                react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", { onClick: saveAutomationSettings, className: "mt-4 rounded bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700" }, "Save Delays")),
+            react__WEBPACK_IMPORTED_MODULE_0___default().createElement("section", { className: "rounded border border-slate-300 bg-white p-4 dark:border-slate-700 dark:bg-slate-800" },
+                react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { className: "flex items-center justify-between" },
+                    react__WEBPACK_IMPORTED_MODULE_0___default().createElement("h2", { className: "text-lg font-semibold" }, "Domain Profiles"),
+                    react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", { onClick: addProfile, className: "rounded bg-emerald-600 px-3 py-2 text-sm font-medium text-white hover:bg-emerald-700" }, "Add Profile")),
+                !hasProfiles && (react__WEBPACK_IMPORTED_MODULE_0___default().createElement("p", { className: "mt-4 text-sm text-amber-600 dark:text-amber-300" }, "No profiles configured. Autonomous reading will not run until at least one profile is saved.")),
+                react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { className: "mt-4 space-y-4" }, profiles.map((profile, index) => (react__WEBPACK_IMPORTED_MODULE_0___default().createElement("article", { key: `${profile.domain}-${index}`, className: "rounded border border-slate-200 p-4 dark:border-slate-700" },
+                    react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { className: "grid gap-3" },
+                        react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", { className: "text-sm font-medium" },
+                            "Domain",
+                            react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", { type: "text", value: profile.domain, onChange: (event) => updateProfileField(index, 'domain', event.target.value), placeholder: "allnovel.org", className: "mt-1 w-full rounded border border-slate-300 p-2 text-slate-900 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" })),
+                        react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", { className: "text-sm font-medium" },
+                            "Title selector",
+                            react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", { type: "text", value: profile.titleSelector, onChange: (event) => updateProfileField(index, 'titleSelector', event.target.value), placeholder: ".chapter-title .chapter-text", className: "mt-1 w-full rounded border border-slate-300 p-2 text-slate-900 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" })),
+                        react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", { className: "text-sm font-medium" },
+                            "Content selector",
+                            react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", { type: "text", value: profile.contentSelector, onChange: (event) => updateProfileField(index, 'contentSelector', event.target.value), placeholder: "#chapter-content", className: "mt-1 w-full rounded border border-slate-300 p-2 text-slate-900 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" })),
+                        react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", { className: "text-sm font-medium" },
+                            "Next chapter selector",
+                            react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", { type: "text", value: profile.nextSelector, onChange: (event) => updateProfileField(index, 'nextSelector', event.target.value), placeholder: "#next_chap", className: "mt-1 w-full rounded border border-slate-300 p-2 text-slate-900 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100" }))),
+                    react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { className: "mt-3" },
+                        react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", { onClick: () => removeProfile(index), className: "rounded bg-rose-600 px-3 py-2 text-sm font-medium text-white hover:bg-rose-700" }, "Delete Profile")))))),
+                react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", { onClick: saveProfiles, className: "mt-4 rounded bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700" }, "Save Profiles")),
+            saveState.type !== 'idle' && (react__WEBPACK_IMPORTED_MODULE_0___default().createElement("p", { className: `rounded border px-3 py-2 text-sm ${saveState.type === 'success'
+                    ? 'border-emerald-300 bg-emerald-50 text-emerald-800 dark:border-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-100'
+                    : 'border-rose-300 bg-rose-50 text-rose-800 dark:border-rose-700 dark:bg-rose-900/30 dark:text-rose-100'}` }, saveState.message)))));
 }
-const container = document.getElementById('root');
-const root = (0,react_dom_client__WEBPACK_IMPORTED_MODULE_1__.createRoot)(container); // createRoot(container!) if you use TypeScript
-root.render(react__WEBPACK_IMPORTED_MODULE_0___default().createElement(Popup, null));
+const rootNode = document.getElementById('root');
+if (!rootNode) {
+    throw new Error('Root node not found for options page.');
+}
+(0,react_dom_client__WEBPACK_IMPORTED_MODULE_1__.createRoot)(rootNode).render(react__WEBPACK_IMPORTED_MODULE_0___default().createElement(OptionsPage, null));
 
 })();
 

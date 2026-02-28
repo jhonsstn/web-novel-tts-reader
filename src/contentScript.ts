@@ -4,50 +4,302 @@ import './content-styles.css';
 import {
   createControlPanel,
   updatePanelContent,
-} from "./components/controlPanel";
+} from './components/controlPanel';
 import { circlePause, circlePlay } from './lib/svgs';
 import { isFirefox } from './utils/browserDetection';
 import { extractTextFromSelection, extractTextFromSelectionSimple } from './utils/textExtraction';
+import {
+  DEFAULT_AUTOMATION_SETTINGS,
+  DomainReaderProfile,
+  ReaderAutomationSettings,
+  getDomainReaderProfiles,
+  getMatchingDomainProfile,
+  getReaderAutomationSettings,
+} from './utils/domainReaderProfiles';
+import { extractDomainReaderContent } from './utils/domainExtraction';
+
+const AUTO_READ_SESSION_KEY = 'etts:auto-read-pending';
+const MAX_PENDING_AUTO_READ_AGE_MS = 30 * 60 * 1000;
 
 let audioElement: HTMLAudioElement | null = null;
-let isPlaying = false;
 let controlPanel: HTMLElement | null = null;
 let currentTTSDeactivate: (() => void) | null = null;
 
-// Make these functions available to the control panel
+let isAutonomousModeEnabled = false;
+let currentNextChapterUrl: string | null = null;
+let currentAutomationSettings: ReaderAutomationSettings = DEFAULT_AUTOMATION_SETTINGS;
+let pendingNavigationTimeoutId: number | null = null;
+let pendingAutoReadStartTimeoutId: number | null = null;
+let isAutonomousNavigationInProgress = false;
+
+interface InitTTSOptions {
+  autonomousMode: boolean;
+  nextChapterUrl?: string | null;
+  automationSettings?: ReaderAutomationSettings;
+}
+
+interface PendingAutoReadState {
+  delayMs: number;
+  createdAt: number;
+}
+
+interface ExtensionMessage {
+  action: string;
+  text?: string;
+}
+
 (window as any).togglePause = togglePause;
 (window as any).stopPlayback = stopPlayback;
 
-export async function initTTS(text: string): Promise<void> {
-  // Deactivate any previous TTS instance
+function clearPendingTimeouts(): void {
+  if (pendingNavigationTimeoutId !== null) {
+    window.clearTimeout(pendingNavigationTimeoutId);
+    pendingNavigationTimeoutId = null;
+  }
+
+  if (pendingAutoReadStartTimeoutId !== null) {
+    window.clearTimeout(pendingAutoReadStartTimeoutId);
+    pendingAutoReadStartTimeoutId = null;
+  }
+}
+
+function setPendingAutoReadState(delayMs: number): void {
+  const state: PendingAutoReadState = {
+    delayMs: Math.max(0, Math.round(delayMs)),
+    createdAt: Date.now(),
+  };
+
+  sessionStorage.setItem(AUTO_READ_SESSION_KEY, JSON.stringify(state));
+}
+
+function consumePendingAutoReadState(): number | null {
+  const rawState = sessionStorage.getItem(AUTO_READ_SESSION_KEY);
+  if (!rawState) {
+    return null;
+  }
+
+  sessionStorage.removeItem(AUTO_READ_SESSION_KEY);
+
+  try {
+    const parsed = JSON.parse(rawState) as PendingAutoReadState;
+    if (typeof parsed.delayMs !== 'number' || typeof parsed.createdAt !== 'number') {
+      return null;
+    }
+
+    if (Date.now() - parsed.createdAt > MAX_PENDING_AUTO_READ_AGE_MS) {
+      return null;
+    }
+
+    return Math.max(0, Math.round(parsed.delayMs));
+  } catch {
+    return null;
+  }
+}
+
+function clearPendingAutoReadState(): void {
+  sessionStorage.removeItem(AUTO_READ_SESSION_KEY);
+}
+
+function disableAutonomousMode(): void {
+  isAutonomousModeEnabled = false;
+  currentNextChapterUrl = null;
+  currentAutomationSettings = DEFAULT_AUTOMATION_SETTINGS;
+  clearPendingTimeouts();
+  clearPendingAutoReadState();
+  isAutonomousNavigationInProgress = false;
+}
+
+function configureAutonomousMode(options: InitTTSOptions): void {
+  if (!options.autonomousMode) {
+    disableAutonomousMode();
+    return;
+  }
+
+  isAutonomousModeEnabled = true;
+  currentNextChapterUrl = options.nextChapterUrl ?? null;
+  currentAutomationSettings = options.automationSettings ?? DEFAULT_AUTOMATION_SETTINGS;
+  clearPendingTimeouts();
+}
+
+function showProfileWarning(message: string): void {
+  const warningId = 'etts-profile-warning';
+  const existing = document.getElementById(warningId);
+  if (existing) {
+    existing.textContent = message;
+    return;
+  }
+
+  const warning = document.createElement('div');
+  warning.id = warningId;
+  warning.textContent = message;
+  warning.style.position = 'fixed';
+  warning.style.top = '20px';
+  warning.style.right = '20px';
+  warning.style.zIndex = '10001';
+  warning.style.padding = '10px 14px';
+  warning.style.borderRadius = '8px';
+  warning.style.background = '#b91c1c';
+  warning.style.color = '#ffffff';
+  warning.style.fontSize = '13px';
+  warning.style.boxShadow = '0 2px 10px rgba(0,0,0,0.2)';
+
+  document.body.appendChild(warning);
+
+  window.setTimeout(() => {
+    if (warning.parentElement) {
+      warning.parentElement.removeChild(warning);
+    }
+  }, 4000);
+}
+
+async function getCurrentSiteProfileOrWarn(): Promise<DomainReaderProfile | null> {
+  const profiles = await getDomainReaderProfiles();
+  const profile = getMatchingDomainProfile(window.location.hostname, profiles);
+  if (!profile) {
+    showProfileWarning('No reader profile configured for this site. Configure selectors in extension options.');
+    return null;
+  }
+
+  return profile;
+}
+
+function scheduleAutonomousNextChapterNavigation(): boolean {
+  if (!isAutonomousModeEnabled || !currentNextChapterUrl) {
+    return false;
+  }
+
+  setPendingAutoReadState(currentAutomationSettings.nextReadStartDelayMs);
+  pendingNavigationTimeoutId = window.setTimeout(() => {
+    pendingNavigationTimeoutId = null;
+    isAutonomousNavigationInProgress = true;
+    window.location.href = currentNextChapterUrl!;
+  }, currentAutomationSettings.nextNavigationDelayMs);
+
+  return true;
+}
+
+function updatePlayPauseButton(): void {
+  const pauseButton = document.querySelector('#tts-pause');
+  if (!pauseButton) {
+    return;
+  }
+
+  const buttonText = audioElement && !audioElement.paused ? 'Pause' : 'Resume';
+  pauseButton.innerHTML = `
+      ${audioElement && !audioElement.paused ? circlePause : circlePlay}
+      <span>
+        ${buttonText}
+      </span>
+    `;
+}
+
+function removeControlPanel(): void {
+  if (!controlPanel) {
+    return;
+  }
+
+  const buttons = controlPanel.querySelectorAll('button');
+  buttons.forEach((button: HTMLButtonElement) => {
+    const newButton = button.cloneNode(true);
+    button.parentNode?.replaceChild(newButton, button);
+  });
+
+  if (controlPanel.parentNode) {
+    controlPanel.parentNode.removeChild(controlPanel);
+  }
+
+  controlPanel = null;
+}
+
+function cleanup(preserveAutonomousState = false): void {
+  if (currentTTSDeactivate) {
+    currentTTSDeactivate();
+    currentTTSDeactivate = null;
+  }
+
+  if (!preserveAutonomousState) {
+    disableAutonomousMode();
+  }
+
+  if (audioElement) {
+    audioElement.onplay = null;
+    audioElement.onpause = null;
+    audioElement.onended = null;
+    audioElement.onerror = null;
+    audioElement.onloadstart = null;
+    audioElement.oncanplay = null;
+
+    try {
+      navigator.mediaSession.setActionHandler('play', null);
+      navigator.mediaSession.setActionHandler('pause', null);
+      navigator.mediaSession.setActionHandler('stop', null);
+    } catch {
+      // Ignore unsupported mediaSession environments
+    }
+
+    const oldSrc = audioElement.src;
+    audioElement.pause();
+    audioElement.src = '';
+    audioElement.load();
+
+    if (oldSrc && oldSrc.startsWith('blob:')) {
+      URL.revokeObjectURL(oldSrc);
+    }
+  }
+
+  audioElement = null;
+  removeControlPanel();
+}
+
+function togglePause(): void {
+  if (!audioElement) {
+    return;
+  }
+
+  if (audioElement.paused) {
+    void audioElement.play();
+  } else {
+    disableAutonomousMode();
+    audioElement.pause();
+  }
+}
+
+function stopPlayback(): void {
+  disableAutonomousMode();
+  if (audioElement) {
+    audioElement.pause();
+    audioElement.currentTime = 0;
+  }
+  cleanup();
+}
+
+export async function initTTS(text: string, options: InitTTSOptions = { autonomousMode: false }): Promise<void> {
   if (currentTTSDeactivate) {
     currentTTSDeactivate();
   }
 
   cleanup();
+  configureAutonomousMode(options);
+
   try {
     const settings = await browser.storage.sync.get({
-      voiceName: "en-US-ChristopherNeural",
-      customVoice: "",
+      voiceName: 'en-US-ChristopherNeural',
+      customVoice: '',
       speed: 1.2,
     });
 
-    // Create control panel in loading state
     controlPanel = await createControlPanel(true);
 
-    const voiceName = settings.customVoice as string || settings.voiceName as string;
-
-    // Convert speed setting to TTS format
-    const speedPercent = Math.round((settings.speed as number - 1) * 100);
+    const voiceName = (settings.customVoice as string) || (settings.voiceName as string);
+    const speedPercent = Math.round(((settings.speed as number) - 1) * 100);
     const rateString = speedPercent >= 0 ? `+${speedPercent}%` : `${speedPercent}%`;
 
     const browserCommunicateOptions: BrowserCommunicateOptions = {
       voice: voiceName,
       rate: rateString,
-      connectionTimeout: 10000, // 10 seconds timeout
+      connectionTimeout: 10000,
     };
 
-    // Create BrowserCommunicate instance
     const communicate = new BrowserCommunicate(text, browserCommunicateOptions);
 
     return new Promise((resolve, reject) => {
@@ -55,40 +307,37 @@ export async function initTTS(text: string): Promise<void> {
       let sourceBuffer: SourceBuffer;
       const chunks: Uint8Array[] = [];
       let isFirstChunk = true;
-      let isActive = true; // Track if this TTS instance is still active
+      let isActive = true;
 
-      // Set up the deactivation function for this instance
       currentTTSDeactivate = () => {
         isActive = false;
       };
 
       if (!audioElement) {
         audioElement = new Audio();
-        audioElement.muted = true; // 🔧 allow autoplay in Firefox
+        audioElement.muted = true;
         audioElement.src = URL.createObjectURL(mediaSource);
 
-        navigator.mediaSession.setActionHandler("play", () => audioElement?.play());
-        navigator.mediaSession.setActionHandler("pause", () => audioElement?.pause());
-        navigator.mediaSession.setActionHandler("stop", () => stopPlayback());
+        navigator.mediaSession.setActionHandler('play', () => audioElement?.play());
+        navigator.mediaSession.setActionHandler('pause', () => audioElement?.pause());
+        navigator.mediaSession.setActionHandler('stop', () => stopPlayback());
 
         audioElement.onplay = () => {
           if (audioElement) {
-            audioElement.muted = false; // 🔊 unmute once playback begins
+            audioElement.muted = false;
           }
-          isPlaying = true;
           updatePlayPauseButton();
         };
 
         audioElement.onpause = () => {
-          isPlaying = false;
           updatePlayPauseButton();
         };
 
         audioElement.onended = () => {
-          isPlaying = false;
           updatePlayPauseButton();
-          // Clean up when playback ends naturally
-          cleanup();
+
+          const scheduled = scheduleAutonomousNextChapterNavigation();
+          cleanup(scheduled);
         };
 
         audioElement.onerror = (error) => {
@@ -97,13 +346,11 @@ export async function initTTS(text: string): Promise<void> {
         };
       }
 
-      // Update control panel immediately to show loading state
       if (controlPanel) {
         updatePanelContent(controlPanel, false);
       }
 
       const appendNextChunk = () => {
-        // Check if this TTS instance is still active and sourceBuffer exists
         if (!isActive || !sourceBuffer || mediaSource.readyState !== 'open') {
           return;
         }
@@ -112,7 +359,6 @@ export async function initTTS(text: string): Promise<void> {
           try {
             const chunk = chunks.shift();
             if (chunk) {
-              // SAFELY COPY to avoid DOMException from detached buffer
               const safeChunk = new Uint8Array(chunk.length);
               safeChunk.set(chunk);
               sourceBuffer.appendBuffer(safeChunk);
@@ -134,11 +380,8 @@ export async function initTTS(text: string): Promise<void> {
             }
           } catch (err) {
             console.error('appendNextChunk error:', err, 'chunk length:', chunks[0]?.length);
-
-            // 🚨 Drop the bad chunk so we don't infinitely loop
             chunks.shift();
 
-            // Only retry if still active
             if (isActive) {
               setTimeout(appendNextChunk, 100);
             }
@@ -148,14 +391,12 @@ export async function initTTS(text: string): Promise<void> {
 
       mediaSource.addEventListener('sourceopen', () => {
         try {
-          // Use WebM format for Firefox, MP3 for Chrome
           const mimeType = isFirefox()
             ? 'audio/webm; codecs="opus"'
             : 'audio/mpeg';
           sourceBuffer = mediaSource.addSourceBuffer(mimeType);
           sourceBuffer.addEventListener('updateend', appendNextChunk);
 
-          // Start the chunked streaming process
           (async () => {
             try {
               let streamEnded = false;
@@ -163,11 +404,10 @@ export async function initTTS(text: string): Promise<void> {
               for await (const chunk of communicate.stream()) {
                 if (!isActive) {
                   streamEnded = true;
-                  return; // Stop if this instance is no longer active
+                  return;
                 }
 
                 if (chunk.type === 'audio' && chunk.data) {
-                  // Firefox fix: clone data before using it
                   const cloned = new Uint8Array(chunk.data.byteLength);
                   cloned.set(chunk.data);
                   chunks.push(cloned);
@@ -177,29 +417,25 @@ export async function initTTS(text: string): Promise<void> {
 
               streamEnded = true;
 
-              // All chunks processed, end the stream
               const checkAndEndStream = () => {
                 if (!isActive) {
-                  return; // Don't continue if this instance is no longer active
+                  return;
                 }
 
-                // Only end the stream when all chunks are processed AND appended
                 if (streamEnded && chunks.length === 0 && !sourceBuffer.updating) {
                   try {
                     if (mediaSource.readyState === 'open') {
                       mediaSource.endOfStream();
-                      resolve(void 0);
-                    } else {
-                      resolve(void 0);
                     }
-                  } catch (err) {
-                    // MediaSource might already be closed
+                    resolve(void 0);
+                  } catch {
                     resolve(void 0);
                   }
                 } else {
                   setTimeout(checkAndEndStream, 100);
                 }
               };
+
               checkAndEndStream();
             } catch (error) {
               console.error('TTS streaming error:', error);
@@ -212,188 +448,150 @@ export async function initTTS(text: string): Promise<void> {
       });
     });
   } catch (error) {
-    console.error("TTS Error:", error);
+    console.error('TTS Error:', error);
     cleanup();
     throw error;
   }
 }
 
-function updatePlayPauseButton() {
-  const pauseButton = document.querySelector("#tts-pause");
-  if (pauseButton) {
-    const buttonText =
-      audioElement && !audioElement.paused ? "Pause" : "Resume";
-    pauseButton.innerHTML = `
-      ${audioElement && !audioElement.paused
-        ? circlePause
-        : circlePlay
-      }
-      <span>
-        ${buttonText}
-      </span>
-    `;
+async function startConfiguredPageRead(): Promise<void> {
+  const profile = await getCurrentSiteProfileOrWarn();
+  if (!profile) {
+    return;
   }
+
+  const extraction = extractDomainReaderContent(profile);
+  if (!extraction) {
+    showProfileWarning('Configured selectors did not find readable chapter content on this page.');
+    return;
+  }
+
+  const automationSettings = await getReaderAutomationSettings();
+  await initTTS(extraction.speechText, {
+    autonomousMode: true,
+    nextChapterUrl: extraction.nextChapterUrl,
+    automationSettings,
+  });
 }
 
-function togglePause() {
-  if (!audioElement) return;
-
-  if (audioElement.paused) {
-    audioElement.play();
-  } else {
-    audioElement.pause();
+async function startSelectedTextRead(selectedText: string): Promise<void> {
+  const profile = await getCurrentSiteProfileOrWarn();
+  if (!profile) {
+    return;
   }
+
+  await initTTS(selectedText, { autonomousMode: false });
 }
 
-function stopPlayback() {
-  if (audioElement) {
-    audioElement.pause();
-    audioElement.currentTime = 0;
-  }
-  cleanup();
-}
-
-function cleanup() {
-  // Deactivate current TTS instance if exists
-  if (currentTTSDeactivate) {
-    currentTTSDeactivate();
-    currentTTSDeactivate = null;
+async function startReadFromHere(selectedText: string): Promise<void> {
+  const profile = await getCurrentSiteProfileOrWarn();
+  if (!profile) {
+    return;
   }
 
-  if (audioElement) {
-    // Remove all event listeners to prevent memory leaks
-    audioElement.onplay = null;
-    audioElement.onpause = null;
-    audioElement.onended = null;
-    audioElement.onerror = null;
-    audioElement.onloadstart = null;
-    audioElement.oncanplay = null;
+  let textToRead = '';
 
-    // Clean up media session handlers
-    try {
-      navigator.mediaSession.setActionHandler("play", null);
-      navigator.mediaSession.setActionHandler("pause", null);
-      navigator.mediaSession.setActionHandler("stop", null);
-    } catch (e) {
-      // Ignore errors if mediaSession is not supported
+  try {
+    textToRead = extractTextFromSelection(selectedText);
+    if (!textToRead || textToRead.trim().length === 0) {
+      textToRead = extractTextFromSelectionSimple(selectedText);
     }
-
-    const oldSrc = audioElement.src;
-    audioElement.pause();
-    audioElement.src = "";
-    audioElement.load(); // Force cleanup of internal buffers
-
-    if (oldSrc && oldSrc.startsWith('blob:')) {
-      URL.revokeObjectURL(oldSrc);
-    }
+  } catch (error) {
+    console.error('Error extracting text from selection:', error);
+    textToRead = selectedText;
   }
-  audioElement = null;
-  isPlaying = false;
-  removeControlPanel();
+
+  if (!textToRead || !textToRead.trim()) {
+    showProfileWarning('No readable text found from the selected position.');
+    return;
+  }
+
+  await initTTS(textToRead, { autonomousMode: false });
 }
 
-function removeControlPanel() {
-  if (controlPanel) {
-    // Remove all event listeners from control panel buttons
-    const buttons = controlPanel.querySelectorAll('button');
-    buttons.forEach((button: HTMLButtonElement) => {
-      const newButton = button.cloneNode(true);
-      button.parentNode?.replaceChild(newButton, button);
+async function maybeStartPendingAutoRead(): Promise<void> {
+  const pendingDelayMs = consumePendingAutoReadState();
+  if (pendingDelayMs === null) {
+    return;
+  }
+
+  const profile = await getCurrentSiteProfileOrWarn();
+  if (!profile) {
+    return;
+  }
+
+  pendingAutoReadStartTimeoutId = window.setTimeout(() => {
+    pendingAutoReadStartTimeoutId = null;
+    void startConfiguredPageRead().catch((error) => {
+      console.error('Auto-start read failed:', error);
     });
-
-    if (controlPanel.parentNode) {
-      controlPanel.parentNode.removeChild(controlPanel);
-    }
-  }
-  controlPanel = null;
+  }, pendingDelayMs);
 }
 
-// Define the message structure
-interface ExtensionMessage {
-  action: string;
-  text?: string;
-}
-
-// Message listener with type assertion to bypass strict type checking
-browser.runtime.onMessage.addListener(function handleMessage(
-  request: ExtensionMessage,
-  sender,
-  sendResponse
-) {
-  if (request.action === "stopPlayback") {
+async function handleIncomingMessage(request: ExtensionMessage): Promise<void> {
+  if (request.action === 'stopPlayback') {
     stopPlayback();
+    return;
   }
-  else if (request.action === "togglePlayback") {
+
+  if (request.action === 'togglePlayback') {
     togglePause();
-  }
-  else if (request.action === "readText") {
-    initTTS(request.text!).catch((error) => {
-      console.error("TTS initialization error:", error);
-    });
-  }
-  else if (request.action === 'readPage') {
-    // Extract the page content
-    const pageContent = document.body.innerText;
-
-    if (pageContent && pageContent.trim() !== '') {
-      initTTS(pageContent).catch((error) => {
-        console.error("TTS initialization error:", error);
-      });
-    } else {
-      console.warn('The page content is empty.');
-    }
-  }
-  else if (request.action === 'readFromHere' && request.text) {
-    // Extract text from the current selection point to the end of the page
-    try {
-      let textToRead = extractTextFromSelection(request.text);
-
-      // Fallback to simple extraction if the advanced method fails
-      if (!textToRead || textToRead.trim().length === 0) {
-        textToRead = extractTextFromSelectionSimple(request.text);
-      }
-
-      if (textToRead && textToRead.trim() !== '') {
-        initTTS(textToRead).catch((error) => {
-          console.error("TTS initialization error:", error);
-        });
-      } else {
-        console.warn('No text found from selection point.');
-        // Fallback to reading the selected text only
-        initTTS(request.text).catch((error) => {
-          console.error("TTS initialization error:", error);
-        });
-      }
-    } catch (error) {
-      console.error("Error extracting text from selection:", error);
-      // Fallback to reading the selected text only
-      initTTS(request.text).catch((error) => {
-        console.error("TTS initialization error:", error);
-      });
-    }
+    return;
   }
 
-  // Don't return true unless we need to send an async response
-  // This prevents "message channel closed" errors
-} as browser.Runtime.OnMessageListener);
+  if (request.action === 'readPage') {
+    await startConfiguredPageRead();
+    return;
+  }
+
+  if (request.action === 'readText' && request.text) {
+    await startSelectedTextRead(request.text);
+    return;
+  }
+
+  if (request.action === 'readFromHere' && request.text) {
+    await startReadFromHere(request.text);
+  }
+}
+
+browser.runtime.onMessage.addListener((request: unknown) => {
+  const message = request as ExtensionMessage;
+  void handleIncomingMessage(message).catch((error) => {
+    console.error('Message handling error:', error);
+  });
+});
 
 window.addEventListener('message', (event) => {
-  if (event.source !== window) return;
+  if (event.source !== window) {
+    return;
+  }
 
   const { action, text } = event.data || {};
+
+  if (action === 'triggerReadPage') {
+    void startConfiguredPageRead().catch((error) => {
+      console.error('triggerReadPage error:', error);
+    });
+  }
+
   if (action === 'triggerTTS' && typeof text === 'string') {
-    initTTS(text).catch((err) => console.error('initTTS error:', err));
+    void startSelectedTextRead(text).catch((error) => {
+      console.error('triggerTTS error:', error);
+    });
   }
 });
 
-// Clean up resources when page is unloaded
 window.addEventListener('beforeunload', () => {
+  clearPendingTimeouts();
+
+  if (isAutonomousNavigationInProgress) {
+    cleanup(true);
+    return;
+  }
+
   cleanup();
 });
 
-// Clean up when page becomes hidden (mobile browser optimization)
-// document.addEventListener('visibilitychange', () => {
-//   if (document.hidden && audioElement && !audioElement.paused) {
-//     audioElement.pause();
-//   }
-// });
+void maybeStartPendingAutoRead().catch((error) => {
+  console.error('Auto-read initialization failed:', error);
+});

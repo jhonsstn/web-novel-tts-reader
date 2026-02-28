@@ -1,0 +1,766 @@
+<html lang="en-US">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport"
+        content="width=device-width, height=device-height, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+    <meta name="csrf-param" content="_csrf">
+    <meta name="csrf-token"
+        content="NjM2NGQzZjBmNDk1YjZhYjlkY2Y4ZDNiNWM2ZTBiMDEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==">
+    <!-- TODO: Meta -->
+    <meta name="title" content="Read SHADOW SLAVE - Chapter 1 Nightmare Begins online free - All Novel">
+    <meta name="description"
+        content="Read SHADOW SLAVE - Chapter 1 Nightmare Begins online free from your Mobile, Table, PC... Novel Updates Daily ">
+    <meta name="image"
+        content="https://allnovel.org/uploads/thumbs/shadow-slave-04eb9e413a-4d27e0af8cf6e971f7ee3c995fc55190.jpg">
+    <meta name="keywords" content="SHADOW SLAVE - Chapter 1 Nightmare Begins">
+    <title>Read SHADOW SLAVE - Chapter 1 Nightmare Begins online free - All Novel</title>
+    <link rel="preload" href="/web/fonts/RobotoCondensed-Regular.woff" as="font" crossorigin="anonymous">
+    <link rel="preload" href="/web/fonts/glyphicons-halflings-regular.woff2" as="font" crossorigin="anonymous">
+    <link rel="shortcut icon" href="/web/images/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/web/images/favicon.ico" type="image/x-icon">
+    <!--[if lt IE 9]><link rel="stylesheet" href="/web/css/iefix.css"><script defer src="/web/js/html5shiv.min.js"></script><script defer src="/web/js/respond.min.js"></script><![endif]-->
+    <script type="text/javascript">
+        var adblock = true;
+        var ajaxSearchUrl = 'https://allnovel.org/ajax-search';
+        var ajaxNovelRateUrl = 'https://allnovel.org/ajax-novel-rate';
+        var ajaxReportChapterUrl = 'https://allnovel.org/ajax-report-chapter';
+        var ajaxUserSettingsUrl = 'https://allnovel.org/ajax-user-settings';
+        var ajaxChapterOptionUrl = 'https://allnovel.org/ajax-chapter-option';
+    </script><!-- <script type="text/javascript" src="/web/js/adframe.js?v=1"></script> -->
+    <script type="text/javascript" src="/web/js/plugins.js"></script>
+    <script type="text/javascript" src="/web/js/scripts.js"></script><!-- TODO: ExtraScript -->
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $navBar = $('.toggle-nav-open');
+            $navBar.on('click', function () {
+                var open = $(this).hasClass('active') ? 'close' : 'open';
+                changeStyle('nav-bar', open);
+                saveStyle('nav-bar', open);
+                $('header').toggle();
+                $('.navbar-breadcrumb').toggle();
+            });
+
+            // Key for the chapter navigation
+            $nextChap = $('#next_chap');
+            $prevChap = $('#prev_chap');
+            $(document).keydown(function (e) {
+                var tag = e.target.tagName.toLowerCase();
+                if (tag == 'input' || tag == 'textarea') return;
+
+                var keypress = e.charCode ? e.charCode : e.keyCode;
+                if (keypress == 39 || keypress == 68) {
+                    if (!$nextChap.attr('disabled')) {
+                        window.location = $nextChap.attr('href');
+                    }
+                } else if (keypress == 37 || keypress == 65) {
+                    if (!$prevChap.attr('disabled')) {
+                        window.location = $prevChap.attr('href');
+                    }
+                }
+            });
+
+            // TODO: Theme
+            $container = $('#container');
+            $chapter = $('#chapter');
+            $chapterContent = $('#chapter-content');
+            var chapterContent = $chapterContent.html();
+            $options = $('#options');
+            $options.show();
+            $optionBackground = $('#option-background');
+            $optionFontFamily = $('#option-font-family');
+            $optionFontSize = $('#option-font-size');
+            $optionLineHeight = $('#option-line-height');
+            $optionFluidSwitch = $('input[type=radio][name=fluid-switch]');
+            $optionNoLineBreak = $('input[type=radio][name=onebreak-switch]');
+            $optionBackground.on('change', function () {
+                changeStyle('background', $(this).val());
+                saveStyle('background', $(this).val());
+            });
+            $optionFontFamily.on('change', function () {
+                changeStyle('font-family', $(this).val());
+                saveStyle('font-family', $(this).val());
+            });
+            $optionFontSize.on('change', function () {
+                changeStyle('font-size', $(this).val());
+                saveStyle('font-size', $(this).val());
+            });
+            $optionLineHeight.on('change', function () {
+                changeStyle('line-height', $(this).val());
+                saveStyle('line-height', $(this).val());
+            });
+            $optionFluidSwitch.on('change', function () {
+                changeStyle('fluid-switch', $(this).val());
+                saveStyle('fluid-switch', $(this).val());
+            });
+            $optionNoLineBreak.on('change', function () {
+                changeStyle('onebreak-switch', $(this).val());
+                saveStyle('onebreak-switch', $(this).val());
+            });
+
+            function changeStyle(style, value) {
+                if (!value) return;
+                switch (style) {
+                    case "background":
+                        $container.css('background-color', value);
+                        if (value == '#232323') {
+                            $container.addClass('dark-background');
+                        } else {
+                            $container.removeClass('dark-background');
+                        }
+                        break;
+                    case "font-family":
+                        $chapterContent.css('font-family', value);
+                        break;
+                    case "font-size":
+                        $chapterContent.css('font-size', value);
+                        break;
+                    case "line-height":
+                        $chapterContent.css('line-height', value);
+                        break;
+                    case "nav-bar":
+                        if (value == 'open') {
+                            $('body').addClass('toggleNav');
+                            $('#container').addClass('active');
+                            $navBar.find('.glyphicon').removeClass('glyphicon-menu-up').addClass('glyphicon-menu-down');
+                            $navBar.addClass('active');
+                        } else {
+                            $navBar.removeClass('active');
+                            $('#container').removeClass('active');
+                            $navBar.find('.glyphicon').removeClass('glyphicon-menu-down').addClass('glyphicon-menu-up');
+                            $('body').removeClass('toggleNav');
+                        }
+                        break;
+                    case "fluid-switch":
+                        if (value == 'yes') {
+                            $chapter.removeClass('container');
+                            $chapter.addClass('container-fluid');
+                        } else {
+                            $chapter.addClass('container');
+                            $chapter.removeClass('container-fluid');
+                        }
+                        break;
+                    case "onebreak-switch":
+                        if (value == 'yes') {
+                            $chapterContent.html(removeLineBreak($chapterContent.html()));
+                        } else {
+                            $chapterContent.html(addLineBreak(chapterContent));
+                        }
+                        break;
+                }
+            }
+
+            function saveStyle(style, value) {
+                // Save to cookies
+                var chapterStyle = getStyle();
+
+                switch (style) {
+                    case "background":
+                        chapterStyle.background = value;
+                        break;
+                    case "font-family":
+                        chapterStyle.fontFamily = value;
+                        break;
+                    case "font-size":
+                        chapterStyle.fontSize = value;
+                        break;
+                    case "line-height":
+                        chapterStyle.lineHeight = value;
+                        break;
+                    case "nav-bar":
+                        chapterStyle.navBar = value;
+                        break;
+                    case "fluid-switch":
+                        chapterStyle.fluidSwitch = value;
+                        break;
+                    case "onebreak-switch":
+                        chapterStyle.onebreakSwitch = value;
+                        break;
+                }
+                var expDate = new Date();
+                expDate.setTime(expDate.getTime() + (7 * 24 * 60 * 60 * 1000));
+                $.cookie("chapter_style", JSON.stringify(chapterStyle), { path: '/', expires: expDate });
+                var settings = {
+                    style: chapterStyle
+                };
+                $.ajax({
+                    method: "POST",
+                    url: ajaxUserSettingsUrl,
+                    data: {
+                        settings: JSON.stringify(settings)
+                    }
+                }).done(function (data) {
+                    console.log(data);
+                });
+            }
+
+            function addLineBreak(content) {
+                var delimiter = '</p>';
+                if (content.indexOf(delimiter) == -1 || content.indexOf('<br/>') > 5 || content.indexOf('<br>') > 5) {
+                    delimiter = '<br/>';
+                    if (content.indexOf(delimiter) == -1) {
+                        delimiter = '<br>';
+                    }
+                }
+                var contentArray = content.split(delimiter);
+                if (contentArray.length == 1) return content;
+                var newContent = '';
+                for (var i in contentArray) {
+                    var contentItem = contentArray[i].trim();
+                    if (contentItem != '<p>') {
+                        newContent += contentItem;
+                        newContent += '<br>';
+                    }
+                }
+                newContent = newContent.replace(/(<br\s*\/?>){1,}/gi, '<br>');
+                newContent = newContent.replace(/<p><br><br><\/p>/gi, '');
+                return newContent;
+            }
+
+            function removeLineBreak(content) {
+                var newContent = content;
+                newContent = newContent.replace(/(<br\s*\/?>){1,}/gi, '');
+                return newContent;
+            }
+
+            function getStyle() {
+                var chapterStyle = $.cookie("chapter_style");
+                if (chapterStyle) {
+                    chapterStyle = JSON.parse(chapterStyle);
+                } else {
+                    chapterStyle = {};
+                }
+                if (!chapterStyle.background) chapterStyle.background = "#F4F4F4";
+                if (!chapterStyle.fontFamily) chapterStyle.fontFamily = "Arial, sans-serif";
+                if (!chapterStyle.fontSize) chapterStyle.fontSize = "18px";
+                if (!chapterStyle.lineHeight) chapterStyle.lineHeight = "160%";
+                if (!chapterStyle.fluidSwitch) chapterStyle.fluidSwitch = 'no';
+                if (!chapterStyle.onebreakSwitch) chapterStyle.onebreakSwitch = 'no';
+                if (!chapterStyle.navBar) chapterStyle.navBar = 'close';
+                return chapterStyle;
+            }
+
+            var chapterStyle = getStyle();
+            $optionBackground.val(chapterStyle.background);
+            $optionFontFamily.val(chapterStyle.fontFamily);
+            $optionFontSize.val(chapterStyle.fontSize);
+            $optionLineHeight.val(chapterStyle.lineHeight);
+            if (chapterStyle.navBar == 'open') {
+                //$('body').addClass('toggleNav');
+                //                $('#container').addClass('active');
+                //                $navBar.find('.glyphicon').removeClass('glyphicon-menu-up').addClass('glyphicon-menu-down');
+                //                $navBar.addClass('active');
+                //                $('header').hide();
+                //                $('.navbar-breadcrumb').hide();
+            }
+            $optionFluidSwitch.val([chapterStyle.fluidSwitch]);
+            $optionNoLineBreak.val([chapterStyle.onebreakSwitch]);
+            //changeStyle('onebreak-switch', chapterStyle.onebreakSwitch);
+
+            // TODO: Chapter Nav
+            $('.chapter_jump').on('change', function () {
+                window.location = $(this).val();
+            });
+
+            // TODO: Novel history
+            var novel = {
+                id: 1570,
+                name: 'SHADOW SLAVE',
+                url: '/shadow-slave.html',
+                chapter: {
+                    id: 1590326,
+                    name: 'Chapter 1 Nightmare Begins',
+                    url: '/shadow-slave/chapter-1-nightmare-begins.html',
+                }
+            };
+
+            jQuery(document).ready(function () {
+                var limit = 10;
+                var novels = $.cookie("novels_history");
+                if (novels) novels = JSON.parse(novels);
+                else novels = [];
+
+                for (var i in novels) {
+                    var nv = novels[i];
+                    if (nv.id == novel.id) {
+                        novels.splice(i, 1);
+                        break;
+                    }
+                }
+
+                if (novels.length == limit) {
+                    novels.splice(-1, 1);
+                }
+                novels.unshift(novel);
+
+                var expDate = new Date();
+                expDate.setTime(expDate.getTime() + (7 * 24 * 60 * 60 * 1000));
+                $.cookie("novels_history", JSON.stringify(novels), { path: '/', expires: expDate });
+            });
+
+            $('#chapter_error').on('click', function () {
+                console.log('chapter_error');
+                var reason = prompt("Please describe error", "");
+                if (reason != null) {
+                    $.ajax({
+                        method: "GET",
+                        url: ajaxReportChapterUrl,
+                        data: {
+                            chapter: $(this).data('chapter-id'),
+                            reason: reason
+                        }
+                    }).done(function (data) {
+                        console.log(data);
+                    });
+                    alert('Thanks report');
+                }
+            });
+
+            chapterJump(novel.id, novel.chapter.id, novel.chapter.url);
+        });
+    </script>
+    <link rel="stylesheet" href="/web/css/style.css">
+    <link rel="stylesheet" href="/web/css/rateit.css">
+    <link rel="stylesheet" href="/web/css/custom.css">
+    <link rel="stylesheet" href="/web/css/responsive.css">
+    <style>
+        :root {
+            --etts-bg-primary: #ffffff;
+            --etts-bg-secondary: #f8f9fa;
+            --etts-text-primary: #000000;
+            --etts-text-secondary: #666666;
+            --etts-border-color: #cccccc;
+            --etts-button-bg: #007bff;
+            --etts-button-text: #ffffff;
+            --etts-hover-bg: #0056b3;
+        }
+
+        [data-theme='dark'] {
+            --etts-bg-primary: #1a1a1a;
+            --etts-bg-secondary: #2d2d2d;
+            --etts-text-primary: #ffffff;
+            --etts-text-secondary: #cccccc;
+            --etts-border-color: #404040;
+            --etts-button-bg: #0d6efd;
+            --etts-button-text: #ffffff;
+            --etts-hover-bg: #0b5ed7;
+        }
+
+        .etts-flex-center {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .etts-tts-icon {
+            width: 1rem;
+            height: 1rem;
+            margin-right: 0.25rem;
+            fill: none;
+            stroke: currentColor;
+        }
+
+        .etts-tts-input {
+            width: 100%;
+            padding-left: 0.75rem;
+            padding-right: 0.75rem;
+            padding-top: 0.5rem;
+            padding-bottom: 0.5rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.375rem;
+            outline: none;
+        }
+
+        .etts-tts-input.etts-dark {
+            background-color: #1f2937;
+            border-color: #4b5563;
+            color: white;
+        }
+
+        .etts-transition-all {
+            transition: all 0.2s ease-in-out;
+        }
+
+        .etts-min-width-200 {
+            min-width: 200px;
+        }
+
+        .etts-space-x-3 {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .etts-space-y-3 {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .etts-animate-spin {
+            animation: etts-spin 1s linear infinite;
+        }
+
+        @keyframes etts-spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .etts-spinner {
+            height: 1.25rem;
+            width: 1.25rem;
+            border: 2px solid #2563eb;
+            border-radius: 50%;
+            border-top-color: transparent;
+        }
+
+        .etts-lucide {
+            width: 20px;
+            height: 20px;
+            stroke: var(--etts-button-text);
+        }
+
+        .etts-tts-controls {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--etts-bg-primary);
+            color: var(--etts-text-primary);
+            border: 1px solid var(--etts-border-color);
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 10000;
+            min-width: 200px;
+            transition: all 0.2s;
+        }
+
+        .etts-tts-button {
+            background: var(--etts-button-bg);
+            color: var(--etts-button-text);
+            border: none;
+            border-radius: 4px;
+            padding: 8px 16px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .etts-tts-button:hover {
+            background: var(--etts-hover-bg);
+        }
+
+        .etts-tts-button.etts-red {
+            background: #dc3545;
+        }
+
+        .etts-tts-button.etts-red:hover {
+            background: #bb2d3b;
+        }
+
+        .etts-loading-spinner {
+            border: 2px solid var(--etts-bg-secondary);
+            border-top: 2px solid var(--etts-button-bg);
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: etts-spin 1s linear infinite;
+        }
+
+        .etts-loading-container {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        /*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8uL3NyYy9jb250ZW50LXN0eWxlcy5jc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7RUFDRSwwQkFBMEI7RUFDMUIsNEJBQTRCO0VBQzVCLDRCQUE0QjtFQUM1Qiw4QkFBOEI7RUFDOUIsNEJBQTRCO0VBQzVCLHlCQUF5QjtFQUN6QiwyQkFBMkI7RUFDM0Isd0JBQXdCO0FBQzFCOztBQUVBO0VBQ0UsMEJBQTBCO0VBQzFCLDRCQUE0QjtFQUM1Qiw0QkFBNEI7RUFDNUIsOEJBQThCO0VBQzlCLDRCQUE0QjtFQUM1Qix5QkFBeUI7RUFDekIsMkJBQTJCO0VBQzNCLHdCQUF3QjtBQUMxQjs7QUFFQTtFQUNFLGFBQWE7RUFDYixtQkFBbUI7RUFDbkIsbUJBQW1CO0VBQ25CLHVCQUF1QjtFQUN2QixTQUFTO0FBQ1g7O0FBRUE7RUFDRSxXQUFXO0VBQ1gsWUFBWTtFQUNaLHFCQUFxQjtFQUNyQixVQUFVO0VBQ1Ysb0JBQW9CO0FBQ3RCOztBQUVBO0VBQ0UsV0FBVztFQUNYLHFCQUFxQjtFQUNyQixzQkFBc0I7RUFDdEIsbUJBQW1CO0VBQ25CLHNCQUFzQjtFQUN0Qix5QkFBeUI7RUFDekIsdUJBQXVCO0VBQ3ZCLGFBQWE7QUFDZjs7QUFFQTtFQUNFLHlCQUF5QjtFQUN6QixxQkFBcUI7RUFDckIsWUFBWTtBQUNkOztBQUVBO0VBQ0UsZ0NBQWdDO0FBQ2xDOztBQUVBO0VBQ0UsZ0JBQWdCO0FBQ2xCOztBQUVBO0VBQ0UsYUFBYTtFQUNiLFlBQVk7QUFDZDs7QUFFQTtFQUNFLGFBQWE7RUFDYixzQkFBc0I7RUFDdEIsWUFBWTtBQUNkOztBQUVBO0VBQ0UsdUNBQXVDO0FBQ3pDOztBQUVBO0VBQ0U7SUFDRSx5QkFBeUI7RUFDM0I7QUFDRjs7QUFFQTtFQUNFLGVBQWU7RUFDZixjQUFjO0VBQ2QseUJBQXlCO0VBQ3pCLGtCQUFrQjtFQUNsQiw2QkFBNkI7QUFDL0I7O0FBRUE7RUFDRSxXQUFXO0VBQ1gsWUFBWTtFQUNaLCtCQUErQjtBQUNqQzs7QUFFQTtFQUNFLGVBQWU7RUFDZixZQUFZO0VBQ1osV0FBVztFQUNYLGtDQUFrQztFQUNsQywrQkFBK0I7RUFDL0IsMENBQTBDO0VBQzFDLGtCQUFrQjtFQUNsQixhQUFhO0VBQ2IseUNBQXlDO0VBQ3pDLGNBQWM7RUFDZCxnQkFBZ0I7RUFDaEIsb0JBQW9CO0FBQ3RCOztBQUVBO0VBQ0UsaUNBQWlDO0VBQ2pDLDhCQUE4QjtFQUM5QixZQUFZO0VBQ1osa0JBQWtCO0VBQ2xCLGlCQUFpQjtFQUNqQixlQUFlO0VBQ2YsaUNBQWlDO0VBQ2pDLGFBQWE7RUFDYixtQkFBbUI7RUFDbkIsdUJBQXVCO0VBQ3ZCLFFBQVE7QUFDVjs7QUFFQTtFQUNFLGdDQUFnQztBQUNsQzs7QUFFQTtFQUNFLG1CQUFtQjtBQUNyQjs7QUFFQTtFQUNFLG1CQUFtQjtBQUNyQjs7QUFFQTtFQUNFLDBDQUEwQztFQUMxQywyQ0FBMkM7RUFDM0Msa0JBQWtCO0VBQ2xCLFdBQVc7RUFDWCxZQUFZO0VBQ1osdUNBQXVDO0FBQ3pDOztBQUVBO0VBQ0UsYUFBYTtFQUNiLG1CQUFtQjtFQUNuQixtQkFBbUI7RUFDbkIsdUJBQXVCO0VBQ3ZCLFNBQVM7QUFDWCIsInNvdXJjZXNDb250ZW50IjpbIjpyb290IHtcbiAgLS1ldHRzLWJnLXByaW1hcnk6ICNmZmZmZmY7XG4gIC0tZXR0cy1iZy1zZWNvbmRhcnk6ICNmOGY5ZmE7XG4gIC0tZXR0cy10ZXh0LXByaW1hcnk6ICMwMDAwMDA7XG4gIC0tZXR0cy10ZXh0LXNlY29uZGFyeTogIzY2NjY2NjtcbiAgLS1ldHRzLWJvcmRlci1jb2xvcjogI2NjY2NjYztcbiAgLS1ldHRzLWJ1dHRvbi1iZzogIzAwN2JmZjtcbiAgLS1ldHRzLWJ1dHRvbi10ZXh0OiAjZmZmZmZmO1xuICAtLWV0dHMtaG92ZXItYmc6ICMwMDU2YjM7XG59XG5cbltkYXRhLXRoZW1lPSdkYXJrJ10ge1xuICAtLWV0dHMtYmctcHJpbWFyeTogIzFhMWExYTtcbiAgLS1ldHRzLWJnLXNlY29uZGFyeTogIzJkMmQyZDtcbiAgLS1ldHRzLXRleHQtcHJpbWFyeTogI2ZmZmZmZjtcbiAgLS1ldHRzLXRleHQtc2Vjb25kYXJ5OiAjY2NjY2NjO1xuICAtLWV0dHMtYm9yZGVyLWNvbG9yOiAjNDA0MDQwO1xuICAtLWV0dHMtYnV0dG9uLWJnOiAjMGQ2ZWZkO1xuICAtLWV0dHMtYnV0dG9uLXRleHQ6ICNmZmZmZmY7XG4gIC0tZXR0cy1ob3Zlci1iZzogIzBiNWVkNztcbn1cblxuLmV0dHMtZmxleC1jZW50ZXIge1xuICBkaXNwbGF5OiBmbGV4O1xuICBmbGV4LWRpcmVjdGlvbjogcm93O1xuICBhbGlnbi1pdGVtczogY2VudGVyO1xuICBqdXN0aWZ5LWNvbnRlbnQ6IGNlbnRlcjtcbiAgZ2FwOiAxcmVtO1xufVxuXG4uZXR0cy10dHMtaWNvbiB7XG4gIHdpZHRoOiAxcmVtO1xuICBoZWlnaHQ6IDFyZW07XG4gIG1hcmdpbi1yaWdodDogMC4yNXJlbTtcbiAgZmlsbDogbm9uZTtcbiAgc3Ryb2tlOiBjdXJyZW50Q29sb3I7XG59XG5cbi5ldHRzLXR0cy1pbnB1dCB7XG4gIHdpZHRoOiAxMDAlO1xuICBwYWRkaW5nLWxlZnQ6IDAuNzVyZW07XG4gIHBhZGRpbmctcmlnaHQ6IDAuNzVyZW07XG4gIHBhZGRpbmctdG9wOiAwLjVyZW07XG4gIHBhZGRpbmctYm90dG9tOiAwLjVyZW07XG4gIGJvcmRlcjogMXB4IHNvbGlkICNkMWQ1ZGI7XG4gIGJvcmRlci1yYWRpdXM6IDAuMzc1cmVtO1xuICBvdXRsaW5lOiBub25lO1xufVxuXG4uZXR0cy10dHMtaW5wdXQuZXR0cy1kYXJrIHtcbiAgYmFja2dyb3VuZC1jb2xvcjogIzFmMjkzNztcbiAgYm9yZGVyLWNvbG9yOiAjNGI1NTYzO1xuICBjb2xvcjogd2hpdGU7XG59XG5cbi5ldHRzLXRyYW5zaXRpb24tYWxsIHtcbiAgdHJhbnNpdGlvbjogYWxsIDAuMnMgZWFzZS1pbi1vdXQ7XG59XG5cbi5ldHRzLW1pbi13aWR0aC0yMDAge1xuICBtaW4td2lkdGg6IDIwMHB4O1xufVxuXG4uZXR0cy1zcGFjZS14LTMge1xuICBkaXNwbGF5OiBmbGV4O1xuICBnYXA6IDAuNzVyZW07XG59XG5cbi5ldHRzLXNwYWNlLXktMyB7XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGZsZXgtZGlyZWN0aW9uOiBjb2x1bW47XG4gIGdhcDogMC43NXJlbTtcbn1cblxuLmV0dHMtYW5pbWF0ZS1zcGluIHtcbiAgYW5pbWF0aW9uOiBldHRzLXNwaW4gMXMgbGluZWFyIGluZmluaXRlO1xufVxuXG5Aa2V5ZnJhbWVzIGV0dHMtc3BpbiB7XG4gIHRvIHtcbiAgICB0cmFuc2Zvcm06IHJvdGF0ZSgzNjBkZWcpO1xuICB9XG59XG5cbi5ldHRzLXNwaW5uZXIge1xuICBoZWlnaHQ6IDEuMjVyZW07XG4gIHdpZHRoOiAxLjI1cmVtO1xuICBib3JkZXI6IDJweCBzb2xpZCAjMjU2M2ViO1xuICBib3JkZXItcmFkaXVzOiA1MCU7XG4gIGJvcmRlci10b3AtY29sb3I6IHRyYW5zcGFyZW50O1xufVxuXG4uZXR0cy1sdWNpZGUge1xuICB3aWR0aDogMjBweDtcbiAgaGVpZ2h0OiAyMHB4O1xuICBzdHJva2U6IHZhcigtLWV0dHMtYnV0dG9uLXRleHQpO1xufVxuXG4uZXR0cy10dHMtY29udHJvbHMge1xuICBwb3NpdGlvbjogZml4ZWQ7XG4gIGJvdHRvbTogMjBweDtcbiAgcmlnaHQ6IDIwcHg7XG4gIGJhY2tncm91bmQ6IHZhcigtLWV0dHMtYmctcHJpbWFyeSk7XG4gIGNvbG9yOiB2YXIoLS1ldHRzLXRleHQtcHJpbWFyeSk7XG4gIGJvcmRlcjogMXB4IHNvbGlkIHZhcigtLWV0dHMtYm9yZGVyLWNvbG9yKTtcbiAgYm9yZGVyLXJhZGl1czogOHB4O1xuICBwYWRkaW5nOiAxNXB4O1xuICBib3gtc2hhZG93OiAwIDJweCAxMHB4IHJnYmEoMCwgMCwgMCwgMC4xKTtcbiAgei1pbmRleDogMTAwMDA7XG4gIG1pbi13aWR0aDogMjAwcHg7XG4gIHRyYW5zaXRpb246IGFsbCAwLjJzO1xufVxuXG4uZXR0cy10dHMtYnV0dG9uIHtcbiAgYmFja2dyb3VuZDogdmFyKC0tZXR0cy1idXR0b24tYmcpO1xuICBjb2xvcjogdmFyKC0tZXR0cy1idXR0b24tdGV4dCk7XG4gIGJvcmRlcjogbm9uZTtcbiAgYm9yZGVyLXJhZGl1czogNHB4O1xuICBwYWRkaW5nOiA4cHggMTZweDtcbiAgY3Vyc29yOiBwb2ludGVyO1xuICB0cmFuc2l0aW9uOiBiYWNrZ3JvdW5kLWNvbG9yIDAuMnM7XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGFsaWduLWl0ZW1zOiBjZW50ZXI7XG4gIGp1c3RpZnktY29udGVudDogY2VudGVyO1xuICBnYXA6IDhweDtcbn1cblxuLmV0dHMtdHRzLWJ1dHRvbjpob3ZlciB7XG4gIGJhY2tncm91bmQ6IHZhcigtLWV0dHMtaG92ZXItYmcpO1xufVxuXG4uZXR0cy10dHMtYnV0dG9uLmV0dHMtcmVkIHtcbiAgYmFja2dyb3VuZDogI2RjMzU0NTtcbn1cblxuLmV0dHMtdHRzLWJ1dHRvbi5ldHRzLXJlZDpob3ZlciB7XG4gIGJhY2tncm91bmQ6ICNiYjJkM2I7XG59XG5cbi5ldHRzLWxvYWRpbmctc3Bpbm5lciB7XG4gIGJvcmRlcjogMnB4IHNvbGlkIHZhcigtLWV0dHMtYmctc2Vjb25kYXJ5KTtcbiAgYm9yZGVyLXRvcDogMnB4IHNvbGlkIHZhcigtLWV0dHMtYnV0dG9uLWJnKTtcbiAgYm9yZGVyLXJhZGl1czogNTAlO1xuICB3aWR0aDogMjBweDtcbiAgaGVpZ2h0OiAyMHB4O1xuICBhbmltYXRpb246IGV0dHMtc3BpbiAxcyBsaW5lYXIgaW5maW5pdGU7XG59XG5cbi5ldHRzLWxvYWRpbmctY29udGFpbmVyIHtcbiAgZGlzcGxheTogZmxleDtcbiAgZmxleC1kaXJlY3Rpb246IHJvdztcbiAgYWxpZ24taXRlbXM6IGNlbnRlcjtcbiAganVzdGlmeS1jb250ZW50OiBjZW50ZXI7XG4gIGdhcDogMXJlbTtcbn1cbiJdLCJzb3VyY2VSb290IjoiIn0= */
+    </style>
+</head>
+
+<body>
+    <div id="wrapper">
+        <main id="container" class=" " style="background-color: #F4F4F4">
+            <div class="navbar-breadcrumb" style="display: block">
+                <div class="container breadcrumb-container">
+                    <ol class="breadcrumb">
+                        <li><a href=""><span class="glyphicon glyphicon-home"></span></a><a href="/"
+                                title="Read novel online"><span>Novel</span></a></li>
+                        <li>
+                            <h1><a href="/shadow-slave.html" title="SHADOW SLAVE"><span>SHADOW SLAVE</span></a></h1>
+                        </li>
+                        <li class="active"><a href="/shadow-slave/chapter-1-nightmare-begins.html"
+                                title="Chapter 1 Nightmare Begins"><span>Chapter 1 Nightmare Begins</span></a></li>
+                    </ol>
+                </div>
+            </div>
+            <div id="chapter" class="chapter container">
+                <div class="row">
+                    <div class="col-xs-12"><a class="truyen-title" href="/shadow-slave.html" title="SHADOW SLAVE">SHADOW
+                            SLAVE</a>
+                        <h2><a class="chapter-title" href="/shadow-slave/chapter-1-nightmare-begins.html"
+                                title="Chapter 1 Nightmare Begins"><span class="chapter-text">Chapter 1 Nightmare
+                                    Begins<span></span></span></a></h2>
+                        <hr class="chapter-start"><button type="button"
+                            class="btn btn-responsive btn-success toggle-nav-open "><span
+                                class="glyphicon glyphicon-menu-up"></span></button>
+                        <div class="chapter-nav" id="chapter-nav-top">
+                            <div class="btn-group"><a class="btn btn-success" disabled="" id="prev_chap"><span
+                                        class="glyphicon glyphicon-chevron-left"></span><span class="hidden-xs">Prev
+                                        Chapter</span></a><button type="button"
+                                    class="btn btn-success chapter_jump"><span
+                                        class="glyphicon glyphicon-list-alt"></span></button><a class="btn btn-success"
+                                    href="/shadow-slave/chapter-2-slave-caravan.html" title="Chapter 2 Slave Caravan"
+                                    id="next_chap"><span class="hidden-xs">Next Chapter</span><span
+                                        class="glyphicon glyphicon-chevron-right"></span></a></div>
+                        </div>
+                        <hr class="chapter-end">
+                        <div id="chapter-content" class="chapter-c"
+                            style="font-family: Arial, sans-serif, serif; font-size: 18px; line-height: 160%;">
+                            <p></p>
+                            <p></p>
+                            <p></p>
+                            <p></p>
+                            <h4>Chapter 1 Nightmare Begins</h4>
+                            <p></p>
+                            <p></p>
+                            <p></p>
+                            <p> A frail-looking young man with pale skin and dark circles under his eyes was sitting on
+                                a rusty bench across from the police station. He was cradling a cup of coffee in his
+                                hands — not the cheap synthetic type slum rats like him had access to, but the real
+                                deal. This cup of plant-based coffee, usually available only to higher rank citizens,
+                                had cost most of his savings. But on this particular day, Sunny decided to pamper
+                                himself. </p>
+                            <p> After all, his life was coming to an end. </p>
+                            <p> Enjoying the warmth of the luxurious drink, he raised the cup and savored the aroma.
+                                Then, tentatively, he took a small sip… and immediately grimaced. </p>
+                            <p> "Ah! So bitter!" </p>
+                            <p> Giving the cup of coffee an intense look, Sunny sighed and forced himself to drink some
+                                more. Bitter or not, he was determined to get his money's worth — taste buds be damned.
+                            </p>
+                            <p> "I should have bought a piece of real meat instead. Who knew actual coffee is so
+                                disgusting? Well. It's going to keep me awake, at least." </p>
+                            <p> He stared into the distance, dozing off, and then slapped himself in the face to wake
+                                up. </p>
+                            <div>
+                                <div></div>
+                            </div>
+                            <p> "Tsk. What a rip-off." </p>
+                            <p> Shaking his head and cursing, Sunny finished the coffee and stood up. Rich people living
+                                in this part of the city were rushing past the small park on their way to work, staring
+                                at him with strange expressions. Looking haggard in his cheap clothes and from the lack
+                                of sleep, unhealthily thin and pale, Sunny was indeed out of his place here. Also,
+                                everyone seemed so tall. Watching them with a bit of envy, he tossed the cup into a
+                                garbage bin. </p>
+                            <p> "I guess that's what three full meals a day would do to you." </p>
+                            <p> The cup missed the bin by a wide margin and fell on the ground. Sunny rolled his eyes in
+                                exasperation, walked over and picked it up before carefully putting it in the trash.
+                                Then, with a slight grin, he crossed the street and entered the police station. </p>
+                            <p> Inside, a tired-looking officer gave him a quick glance and frowned with obvious
+                                distaste. </p>
+                            <p> "Are you lost, boy?" </p>
+                            <p> Sunny looked around with curiosity, noting reinforced armor plates on the walls and
+                                poorly hidden turret nests in the ceiling. The officer, too, looked scruffy and mean. At
+                                least police stations remained the same wherever you go. </p>
+                            <p> "Hey! I'm talking to you!" </p>
+                            <p> Sunny cleared his throat. </p>
+                            <p> "Uh, no." </p>
+                            <p> Then he scratched the back of his head and added: </p>
+                            <p> "As demanded by the Third Special Directive, I am here to surrender myself as a carrier
+                                of the Nightmare Spell." </p>
+                            <p> The officer's expression instantly changed from irritated to wary. He looked the young
+                                man over once again, this time with piercing intensity. </p>
+                            <p> "Are you sure you are infected? When did you start showing symptoms?" </p>
+                            <p> Sunny shrugged. </p>
+                            <p> "A week ago?" </p>
+                            <p> The officer became visibly paler. </p>
+                            <p> "Shit." </p>
+                            <p> Then, with a hurried motion, he pressed a button on his terminal and bellowed: </p>
+                            <p> "Attention! Code Black in the lobby! I repeat! CODE BLACK!" </p>
+                            <p> *** </p>
+                            <p> The Nightmare Spell first appeared in the world a few decades ago. Back then, the planet
+                                was just starting to recover from a series of devastating natural disasters and
+                                subsequent resource wars. </p>
+                            <p> At first, the emergence of a new disease that caused millions of people to complain
+                                about constant fatigue and sleepiness did not attract a lot of attention. But when they
+                                started to fall into an unnatural slumber, with no sign of waking up even days later,
+                                governments finally panicked. Of course, by then it was already too late — not that an
+                                early response could have made any difference. </p>
+                            <p> When the infected started dying in their sleep, their dead bodies turning into monsters,
+                                no one was ready. Nightmare Creatures quickly overwhelmed national militaries, plunging
+                                the world into complete chaos. </p>
+                            <p> No one knew what the Spell was, what powers it possessed, and how to fight it. </p>
+                            <p> In the end, it was the Awakened — those who survived the first trials of the Spell and
+                                came back alive — who put a stop to its rampage. Armed with miraculous abilities earned
+                                in their Nightmares, they restored peace and created a semblance of a new order. </p>
+                            <p> Of course, it was only the first of the catastrophes brought upon by the Spell. But as
+                                far as Sunny was concerned, none of it had anything to do with him — not until a few
+                                days ago, that is, when he first started having trouble with staying awake. </p>
+                            <p> For an average person, being chosen by the Spell was as much of a risk as an
+                                opportunity. Kids learned survival skills and fighting techniques in school, on the off
+                                chance of being infected. Well-to-do families hired private tutors to train their
+                                children in all sorts of martial arts. Those from the Awakened clans even had access to
+                                powerful legacies, wielding inherited Memories and Echoes in their first visit to the
+                                Dream Realm. </p>
+                            <p> The richer your family was, the better your chances of surviving and becoming an
+                                Awakened were. </p>
+                            <p> But for Sunny, who had no family to speak of and spent most of his time scrounging for
+                                food instead of going to school, being chosen by the Spell presented no opportunity at
+                                all. To him, it was basically a death sentence. </p>
+                            <p> *** </p>
+                            <p> A few minutes later, Sunny was yawning while several policemen were busy putting him in
+                                restraints. Soon he was fastened into a bulky chair that looked like a weird mix between
+                                a hospital bed and a torture device. The room they were in was situated in the basement
+                                of the police station, with thick armored walls and a formidable-looking vault door.
+                                Other officers were standing near the walls, with automatic rifles in their hands and
+                                grim expressions on their faces. </p>
+                            <p> Sunny did not particularly care about them. The only thing he could think about was how
+                                much he wanted to sleep. </p>
+                            <p> Finally, the vault door opened, and a gray-haired policeman walked in. He had a seasoned
+                                face and stern eyes, looking like someone who had seen a lot of terrible things in his
+                                life. After checking the restraints, the policeman glanced quickly on his wristwatch and
+                                then turned to Sunny: </p>
+                            <div class="ads ads-holder ads-middle text-center"></div>
+                            <p> "What's your name, kid?" </p>
+                            <p> Sunny blinked a few times, trying to concentrate, then shifted uncomfortably. </p>
+                            <p> "Sunless." </p>
+                            <p> The old policeman raised an eyebrow. </p>
+                            <div>
+                                <div></div>
+                            </div>
+                            <p> "Sunless? That's a strange name." </p>
+                            <p> Sunny tried to shrug, but found himself unable to move. </p>
+                            <p> "What's so strange about it? At least I have a name. Back in the outskirts, not everyone
+                                even gets one." </p>
+                            <p> After another yawn, he added: </p>
+                            <p> "It's because I was born during a solar eclipse. My mom had a poetic soul, you see."
+                            </p>
+                            <p> That's why he got this weird-ass name and his little sister was called Rain… back when
+                                she still lived with them, at least. Whether it was the result of poetic imagination or
+                                simple laziness, he did not know. </p>
+                            <p> The old policeman grunted. </p>
+                            <p> "Do you want me to contact your family?" </p>
+                            <p> Sunny simply shook his head. </p>
+                            <p> "There's no one. Don't bother." </p>
+                            <p> For a second, there was a dark look on the policeman's face. Then his expression turned
+                                serious. </p>
+                            <p> "Alright, Sunless. How long can you stay awake?" </p>
+                            <p> "Uh… not long." </p>
+                            <p> The policeman sighed. </p>
+                            <p> "Then we don't have time for the full procedure. Try to resist for as long as you can
+                                and listen to me very carefully. Okay?" </p>
+                            <p> Not waiting for a response, he added: </p>
+                            <p> "How much do you know about the Nightmare Spell?" </p>
+                            <p> Sunny gave him a questioning look. </p>
+                            <p> "As much as anyone, I guess? Who doesn't know about the Spell?" </p>
+                            <p> "Not the fancy stuff you see in dramas and hear in the propaganda broadcasts. I mean how
+                                much do you really know?" </p>
+                            <p> That was a hard question to answer. </p>
+                            <p> "Don't I just go into the Dream Realm, kill a few monsters to complete the First
+                                Nightmare, receive magic powers and become an Awakened?" </p>
+                            <p> The old policeman shook his head. </p>
+                            <p> "Listen carefully. Once you fall asleep, you will be transported inside your First
+                                Nightmare. Nightmares are trials created by the Spell. Once inside, you will meet
+                                monsters, sure, but you will also meet people. Remember: they are not real. They're just
+                                illusions conjured up to test you." </p>
+                            <p> "How do you know?" </p>
+                            <p> The policeman just stared at him. </p>
+                            <p> "I mean, no one understands what the Spell is and how it works, right? So how do you
+                                know that they're not real?" </p>
+                            <p> "You might have to kill them, kid. So do yourself a favor and just think about them as
+                                illusions." </p>
+                            <p> "Oh." </p>
+                            <p> The old policeman waited for a second, then nodded and continued. </p>
+                            <p> "A lot of things about the First Nightmare depend on luck. Generally, it shouldn't be
+                                overwhelmingly hard. The situation you're in, the tools you have at your disposal and
+                                the creatures you have to defeat should be within the range of your abilities, at least.
+                                After all, the Spell sets up trials, not executions. You're a bit disadvantaged due to…
+                                well… your circumstances. But kids from the outskirts are tough. Don't give up on
+                                yourself just yet." </p>
+                            <p> "Uh-uh." </p>
+                            <p> Sunny was getting more and more sleepy. It was becoming hard to follow the conversation.
+                            </p>
+                            <p> "About those "magic powers" you mentioned… you will indeed receive them if you survive
+                                until the end of the Nightmare. What those powers will be, exactly, depends on your
+                                natural affinity as well what you do during the trial. But some of it will be at your
+                                disposal right from the start…" </p>
+                            <p> The voice of the old policeman sounded more and more distant. Sunny's eyelids were so
+                                heavy that he was struggling to keep his eyes open. </p>
+                            <p> "Remember: the first thing you must do once inside the Nightmare is to check your
+                                Attributes and your Aspect. If you get a combat-oriented Aspect, something like a
+                                Swordsman or an Archer, things will be easier. If it is reinforced by a physical
+                                Attribute, then that's even better. Combat Aspects are the most common, so the
+                                probability of receiving one is high." </p>
+                            <p> The armored room was growing dimmer. </p>
+                            <p> "If you're unlucky and your Aspect has nothing to do with combat, don't despair. Sorcery
+                                and utility Aspects are useful in their own ways, you'll just have to be smart about it.
+                                There are really no useless Aspects. Well, almost. So just do anything in your power to
+                                survive." </p>
+                            <div>
+                                <div></div>
+                            </div>
+                            <p> "If you survive, you will be halfway to becoming an Awakened. But if you die, you'll
+                                open a gate for a Nightmare Creature to appear in the real world. Which means that my
+                                colleagues and I will have to deal with it. So… please don't die, Sunless." </p>
+                            <p> Already half-asleep, Sunny felt a bit touched by the policeman's words. </p>
+                            <p> "Or, at least, try to not die right away. The nearest Awakened won't be able to get here
+                                for a few hours, so we would really appreciate it if you don't make us fight that thing
+                                ourselves…" </p>
+                            <p> 'What?' </p>
+                            <p> With that last thought, Sunny finally slipped into a deep slumber. </p>
+                            <p> Everything became black. </p>
+                            <p> And then, in the darkness, a faintly familiar voice rang: </p>
+                            <p> [Aspirant! Welcome to the Nightmare Spell. Prepare for your First Trial…]</p>
+                            <div>
+                                <div></div>
+                            </div>
+                            <div
+                                style="position: relative; width: 300px; height: 250px; margin: 0 auto; overflow: hidden;">
+                                <iframe src="https://freegames.click/ads01/kdt/" width="300" height="250"
+                                    frameborder="0" scrolling="no" sandbox="allow-scripts allow-same-origin"
+                                    style="border: none; pointer-events: none;"></iframe><a
+                                    href="https://freegames.click/ads01/go/" target="_blank"
+                                    rel="sponsored nofollow noopener noreferrer"
+                                    style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; cursor: pointer;"></a>
+                            </div>
+                            <div align="left">
+                                If you find any errors ( broken links, non-standard content, etc.. ), Please let us know
+                                &lt; report chapter &gt; so we can fix it as soon as possible. </div>
+                        </div>
+                        <hr class="chapter-end">
+                        <div class="chapter-nav" id="chapter-nav-top">
+                            <div class="btn-group"><a class="btn btn-success" disabled="" id="prev_chap"><span
+                                        class="glyphicon glyphicon-chevron-left"></span><span class="hidden-xs">Prev
+                                        Chapter</span></a><button type="button"
+                                    class="btn btn-success chapter_jump"><span
+                                        class="glyphicon glyphicon-list-alt"></span></button><a class="btn btn-success"
+                                    href="/shadow-slave/chapter-2-slave-caravan.html" title="Chapter 2 Slave Caravan"
+                                    id="next_chap"><span class="hidden-xs">Next Chapter</span><span
+                                        class="glyphicon glyphicon-chevron-right"></span></a></div>
+                        </div>
+                        <div class="text-center"><button type="button" class="btn btn-warning" id="chapter_error"
+                                data-chapter-id="1590326"><span class="glyphicon glyphicon-exclamation-sign"></span>
+                                Report chapter
+                            </button><!--    <button type="button" class="btn btn-info" id="chapter_comment">--><!--        <span class="glyphicon glyphicon-comment"></span> Comment--><!--    </button>-->
+                        </div>
+                        <div class="bg-info text-center visible-md visible-lg box-notice">
+                            Tip: You can use left, right, A and D keyboard keys to browse between chapters.
+                        </div>
+                        <div class="col-xs-12"></div>
+                        <div align="center" style="padding-top:15px"></div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+    </div>
+</body>
+
+</html>

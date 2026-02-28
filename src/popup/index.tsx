@@ -4,7 +4,6 @@ import { createRoot } from 'react-dom/client';
 import browser from 'webextension-polyfill';
 import './styles.css';
 import { MoonIcon, SunIcon } from 'lucide-react';
-import { isFirefox } from '../utils/browserDetection';
 
 // Top voices to be displayed in the dropdown
 const TOP_VOICES = [
@@ -72,42 +71,42 @@ function Popup() {
     try {
       const tabs = await browser.tabs.query({ active: true, currentWindow: true });
       const tab = tabs[0];
+
       if (!tab?.id) {
         console.error('No active tab found');
         return;
       }
 
-      const injectionResults = await browser.scripting.executeScript({
-        target: { tabId: tab.id },
-        func: () => document.body.innerText,
+      await browser.tabs.sendMessage(tab.id, {
+        action: 'readPage',
       });
-
-      for (const frameResult of injectionResults) {
-        const pageContent = frameResult.result as string;
-        if (!pageContent || !pageContent.trim()) {
-          console.warn('The page content is empty.');
-          continue;
-        }
-
-        if (isFirefox()) {
-          // 🔁 Firefox workaround: inject postMessage in page context
-          await browser.scripting.executeScript({
-            target: { tabId: tab.id },
-            func: (text) => {
-              window.postMessage({ action: 'triggerTTS', text }, '*');
-            },
-            args: [pageContent],
-          });
-        } else {
-          // ✅ Chrome path: send message to content script
-          await browser.tabs.sendMessage(tab.id, {
-            action: 'readText',
-            text: pageContent,
-          });
-        }
-      }
     } catch (error) {
-      console.error('Error sending TTS message:', error);
+      console.error('Error sending readPage message:', error);
+
+      try {
+        const tabs = await browser.tabs.query({ active: true, currentWindow: true });
+        const tab = tabs[0];
+        if (!tab?.id) {
+          return;
+        }
+
+        await browser.scripting.executeScript({
+          target: { tabId: tab.id },
+          func: () => {
+            window.postMessage({ action: 'triggerReadPage' }, '*');
+          },
+        });
+      } catch (fallbackError) {
+        console.error('Fallback readPage trigger failed:', fallbackError);
+      }
+    }
+  };
+
+  const handleOpenConfiguration = async () => {
+    try {
+      await browser.runtime.openOptionsPage();
+    } catch (error) {
+      console.error('Error opening options page:', error);
     }
   };
 
@@ -168,15 +167,19 @@ function Popup() {
           className="w-full"
         />
       </div>
-      <div className="mt-4">
-        <>
-          <button
-            onClick={() => handlePlayClick()}
-            className="px-4 py-2 bg-blue-500 text-white rounded"
-          >
-            Read current page aloud
-          </button>
-        </>
+      <div className="mt-4 space-y-2">
+        <button
+          onClick={() => handlePlayClick()}
+          className="w-full px-4 py-2 bg-blue-500 text-white rounded"
+        >
+          Read current page aloud
+        </button>
+        <button
+          onClick={() => handleOpenConfiguration()}
+          className="w-full px-4 py-2 bg-slate-600 text-white rounded"
+        >
+          Open reader configuration
+        </button>
       </div>
     </div>
   );
