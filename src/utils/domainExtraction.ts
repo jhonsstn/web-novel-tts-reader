@@ -103,6 +103,8 @@ function getReadableParagraphEntries(contentElement: Element): ParagraphEntry[] 
 
 function resolveParagraphData(
   contentElement: Element | null,
+  titleElement: Element | null,
+  titleText: string,
   startFromViewportParagraph: boolean,
 ): ParagraphData {
   if (!contentElement) {
@@ -116,25 +118,11 @@ function resolveParagraphData(
   }
 
   const paragraphEntries = getReadableParagraphEntries(contentElement);
-  if (paragraphEntries.length > 0) {
-    const paragraphTexts = paragraphEntries.map((entry) => entry.text);
-    const paragraphElements = paragraphEntries.map((entry) => entry.element);
-    const firstFullyVisibleIndex = startFromViewportParagraph
-      ? paragraphEntries.findIndex((entry) => isElementFullyVisibleInViewport(entry.element))
-      : 0;
-    const startParagraphIndex = firstFullyVisibleIndex >= 0 ? firstFullyVisibleIndex : 0;
+  const contentText = paragraphEntries.length > 0
+    ? paragraphEntries.map((entry) => entry.text).join('\n\n')
+    : getElementText(contentElement);
 
-    return {
-      contentText: paragraphTexts.join('\n\n'),
-      speechContentText: paragraphTexts.slice(startParagraphIndex).join('\n\n'),
-      paragraphTexts,
-      paragraphElements,
-      startParagraphIndex,
-    };
-  }
-
-  const fallbackText = getElementText(contentElement);
-  if (!fallbackText) {
+  if (!contentText) {
     return {
       contentText: '',
       speechContentText: '',
@@ -144,12 +132,37 @@ function resolveParagraphData(
     };
   }
 
+  const playbackEntries: ParagraphEntry[] = paragraphEntries.length > 0
+    ? [...paragraphEntries]
+    : [{ element: contentElement, text: contentText }];
+
+  const shouldIncludeTitle = Boolean(
+    titleElement
+    && titleText
+    && (
+      !startFromViewportParagraph
+      || isElementFullyVisibleInViewport(titleElement)
+    ),
+  );
+
+  if (shouldIncludeTitle && titleElement) {
+    playbackEntries.unshift({
+      element: titleElement,
+      text: titleText,
+    });
+  }
+
+  const firstFullyVisibleIndex = startFromViewportParagraph
+    ? playbackEntries.findIndex((entry) => isElementFullyVisibleInViewport(entry.element))
+    : 0;
+  const startParagraphIndex = firstFullyVisibleIndex >= 0 ? firstFullyVisibleIndex : 0;
+
   return {
-    contentText: fallbackText,
-    speechContentText: fallbackText,
-    paragraphTexts: [fallbackText],
-    paragraphElements: [],
-    startParagraphIndex: 0,
+    contentText,
+    speechContentText: playbackEntries.slice(startParagraphIndex).map((entry) => entry.text).join('\n\n'),
+    paragraphTexts: playbackEntries.map((entry) => entry.text),
+    paragraphElements: playbackEntries.map((entry) => entry.element),
+    startParagraphIndex,
   };
 }
 
@@ -163,14 +176,17 @@ export function extractDomainReaderContent(
   const nextElement = trySelect(profile.nextSelector);
 
   const titleText = getElementText(titleElement);
-  const paragraphData = resolveParagraphData(contentElement, options.startFromViewportParagraph ?? false);
+  const paragraphData = resolveParagraphData(
+    contentElement,
+    titleElement,
+    titleText,
+    options.startFromViewportParagraph ?? false,
+  );
   if (!paragraphData.speechContentText) {
     return null;
   }
 
-  const speechText = !options.startFromViewportParagraph && titleText
-    ? `${titleText}\n\n${paragraphData.speechContentText}`
-    : paragraphData.speechContentText;
+  const speechText = paragraphData.speechContentText;
 
   return {
     speechText,
