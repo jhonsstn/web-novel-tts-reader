@@ -227,6 +227,21 @@ function splitTextIntoParagraphs(text: string): string[] {
   return [normalized];
 }
 
+function buildParagraphStartOffsets(paragraphs: string[]): number[] {
+  const offsets: number[] = [];
+  let cursor = 0;
+
+  paragraphs.forEach((paragraph, index) => {
+    offsets.push(cursor);
+    cursor += paragraph.length;
+    if (index < paragraphs.length - 1) {
+      cursor += 2;
+    }
+  });
+
+  return offsets;
+}
+
 function clearCurrentParagraphHighlight(): void {
   if (!highlightedParagraphElement) {
     return;
@@ -283,20 +298,22 @@ function updateParagraphNavigationButtons(): void {
   nextParagraphButton.disabled = !canGoNext;
 }
 
-function getCurrentParagraphText(): string | null {
+function setCurrentParagraphIndex(nextParagraphIndex: number): void {
   if (!paragraphNavigationState) {
-    return null;
+    return;
   }
 
-  return paragraphNavigationState.paragraphs[paragraphNavigationState.currentParagraphIndex] ?? null;
-}
-
-function hasNextParagraph(): boolean {
-  if (!paragraphNavigationState) {
-    return false;
+  const clampedParagraphIndex = Math.min(
+    Math.max(nextParagraphIndex, 0),
+    paragraphNavigationState.paragraphs.length - 1,
+  );
+  if (clampedParagraphIndex === paragraphNavigationState.currentParagraphIndex) {
+    return;
   }
 
-  return paragraphNavigationState.currentParagraphIndex < paragraphNavigationState.paragraphs.length - 1;
+  paragraphNavigationState.currentParagraphIndex = clampedParagraphIndex;
+  updateParagraphNavigationButtons();
+  highlightCurrentParagraph();
 }
 
 function setParagraphNavigationState(text: string, options: InitTTSOptions): void {
@@ -489,8 +506,39 @@ export async function initTTS(text: string, options: InitTTSOptions = { autonomo
   cleanup();
   configureAutonomousMode(options);
   setParagraphNavigationState(text, options);
-  const textToSpeak = getCurrentParagraphText() ?? text;
+  const playbackParagraphStartIndex = paragraphNavigationState?.currentParagraphIndex ?? 0;
+  const playbackParagraphs = paragraphNavigationState
+    ? paragraphNavigationState.paragraphs.slice(playbackParagraphStartIndex)
+    : [];
+  const playbackParagraphOffsets = buildParagraphStartOffsets(playbackParagraphs);
+  const textToSpeak = playbackParagraphs.length > 0
+    ? playbackParagraphs.join('\n\n')
+    : text;
+  const normalizedTextToSpeak = textToSpeak.toLowerCase();
+  let boundarySearchCursor = 0;
+  const pendingParagraphBoundaryEvents: Array<{ timeSeconds: number; paragraphIndex: number }> = [];
+  let boundarySyncIntervalId: number | null = null;
 
+  const applyPendingParagraphBoundaryEvents = (): void => {
+    if (!audioElement || pendingParagraphBoundaryEvents.length === 0) {
+      return;
+    }
+
+    const playbackTimeSeconds = audioElement.currentTime + 0.05;
+    let nextParagraphIndex = paragraphNavigationState?.currentParagraphIndex ?? playbackParagraphStartIndex;
+
+    while (
+      pendingParagraphBoundaryEvents.length > 0
+      && pendingParagraphBoundaryEvents[0].timeSeconds <= playbackTimeSeconds
+    ) {
+      const boundaryEvent = pendingParagraphBoundaryEvents.shift();
+      if (boundaryEvent) {
+        nextParagraphIndex = boundaryEvent.paragraphIndex;
+      }
+    }
+
+    setCurrentParagraphIndex(nextParagraphIndex);
+  };
   try {
     const settings = await browser.storage.sync.get({
       voiceName: 'en-US-ChristopherNeural',
@@ -521,6 +569,10 @@ export async function initTTS(text: string, options: InitTTSOptions = { autonomo
 
       currentTTSDeactivate = () => {
         isActive = false;
+        if (boundarySyncIntervalId !== null) {
+          window.clearInterval(boundarySyncIntervalId);
+          boundarySyncIntervalId = null;
+        }
       };
 
       if (!audioElement) {
@@ -539,6 +591,7 @@ export async function initTTS(text: string, options: InitTTSOptions = { autonomo
             audioElement.muted = false;
           }
           updatePlayPauseButton();
+          applyPendingParagraphBoundaryEvents();
         };
 
         audioElement.onpause = () => {
@@ -547,15 +600,6 @@ export async function initTTS(text: string, options: InitTTSOptions = { autonomo
 
         audioElement.onended = () => {
           updatePlayPauseButton();
-
-          if (hasNextParagraph()) {
-            void moveParagraph(1).catch((error) => {
-              console.error('Failed to auto-advance paragraph:', error);
-              const scheduled = scheduleAutonomousNextChapterNavigation();
-              cleanup(scheduled);
-            });
-            return;
-          }
 
           const scheduled = scheduleAutonomousNextChapterNavigation();
           cleanup(scheduled);
@@ -572,6 +616,7 @@ export async function initTTS(text: string, options: InitTTSOptions = { autonomo
       }
       updateParagraphNavigationButtons();
       highlightCurrentParagraph();
+      boundarySyncIntervalId = window.setInterval(applyPendingParagraphBoundaryEvents, 50);
 
       const appendNextChunk = () => {
         if (!isActive || !sourceBuffer || mediaSource.readyState !== 'open') {
@@ -635,7 +680,47 @@ export async function initTTS(text: string, options: InitTTSOptions = { autonomo
                   cloned.set(chunk.data);
                   chunks.push(cloned);
                   appendNextChunk();
+                } else if (
+                  chunk.type === 'WordBoundary'
+                  && typeof chunk.text === 'string'
+                  && playbackParagraphOffsets.length > 0
+                ) {
+                  const normalizedBoundaryText = chunk.text.trim().toLowerCase();
+                  if (!normalizedBoundaryText) {
+                    continue;
+                  }
+
+                  let boundaryIndex = normalizedTextToSpeak.indexOf(
+                    normalizedBoundaryText,
+                    boundarySearchCursor,
+                  );
+                  if (boundaryIndex < 0) {
+                    boundaryIndex = normalizedTextToSpeak.indexOf(normalizedBoundaryText);
+                  }
+                  if (boundaryIndex < 0) {
+                    continue;
+                  }
+
+                  boundarySearchCursor = boundaryIndex + normalizedBoundaryText.length;
+
+                  let localParagraphIndex = 0;
+                  for (let i = playbackParagraphOffsets.length - 1; i >= 0; i -= 1) {
+                    if (boundarySearchCursor >= playbackParagraphOffsets[i]) {
+                      localParagraphIndex = i;
+                      break;
+                    }
+                  }
+
+                  const nextParagraphIndex = playbackParagraphStartIndex + localParagraphIndex;
+                  if (typeof chunk.offset === 'number') {
+                    pendingParagraphBoundaryEvents.push({
+                      timeSeconds: chunk.offset / 10_000_000,
+                      paragraphIndex: nextParagraphIndex,
+                    });
+                  } else {
+                    setCurrentParagraphIndex(nextParagraphIndex);
                 }
+              }
               }
 
               streamEnded = true;
