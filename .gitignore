@@ -24,3 +24,5 @@ web-ext-artifacts
 !.gitignore
 !.bablerc
 !FIREFOX_COMPATIBILITY.md
+
+./dist
