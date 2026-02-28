@@ -129,6 +129,16 @@
   background: var(--etts-hover-bg);
 }
 
+.etts-tts-button:disabled {
+  background: var(--etts-bg-secondary);
+  color: var(--etts-text-secondary);
+  cursor: not-allowed;
+}
+
+.etts-tts-button:disabled:hover {
+  background: var(--etts-bg-secondary);
+}
+
 .etts-tts-button.etts-red {
   background: #dc3545;
 }

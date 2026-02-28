@@ -31,11 +31,30 @@ let currentAutomationSettings: ReaderAutomationSettings = DEFAULT_AUTOMATION_SET
 let pendingNavigationTimeoutId: number | null = null;
 let pendingAutoReadStartTimeoutId: number | null = null;
 let isAutonomousNavigationInProgress = false;
+let paragraphNavigationState: ParagraphNavigationState | null = null;
+
+interface ParagraphNavigationConfig {
+  paragraphTexts: string[];
+  startParagraphIndex: number;
+}
+
+interface ParagraphPlaybackOptions {
+  autonomousMode: boolean;
+  nextChapterUrl: string | null;
+  automationSettings?: ReaderAutomationSettings;
+}
+
+interface ParagraphNavigationState {
+  paragraphs: string[];
+  currentParagraphIndex: number;
+  playbackOptions: ParagraphPlaybackOptions;
+}
 
 interface InitTTSOptions {
   autonomousMode: boolean;
   nextChapterUrl?: string | null;
   automationSettings?: ReaderAutomationSettings;
+  paragraphNavigation?: ParagraphNavigationConfig;
 }
 
 interface PendingAutoReadState {
@@ -50,6 +69,8 @@ interface ExtensionMessage {
 
 (window as any).togglePause = togglePause;
 (window as any).stopPlayback = stopPlayback;
+(window as any).previousParagraph = previousParagraph;
+(window as any).nextParagraph = nextParagraph;
 
 function clearPendingTimeouts(): void {
   if (pendingNavigationTimeoutId !== null) {
@@ -178,6 +199,127 @@ function scheduleAutonomousNextChapterNavigation(): boolean {
   return true;
 }
 
+function splitTextIntoParagraphs(text: string): string[] {
+  const normalized = text.replace(/\r\n/g, '\n').trim();
+  if (!normalized) {
+    return [];
+  }
+
+  const blockParagraphs = normalized
+    .split(/\n{2,}/)
+    .map((paragraph) => paragraph.trim())
+    .filter((paragraph) => paragraph.length > 0);
+  if (blockParagraphs.length > 1) {
+    return blockParagraphs;
+  }
+
+  const lineParagraphs = normalized
+    .split(/\n+/)
+    .map((paragraph) => paragraph.trim())
+    .filter((paragraph) => paragraph.length > 0);
+  if (lineParagraphs.length > 1) {
+    return lineParagraphs;
+  }
+
+  return [normalized];
+}
+
+function updateParagraphNavigationButtons(): void {
+  if (!controlPanel) {
+    return;
+  }
+
+  const previousParagraphButton = controlPanel.querySelector('#tts-prev-paragraph') as HTMLButtonElement | null;
+  const nextParagraphButton = controlPanel.querySelector('#tts-next-paragraph') as HTMLButtonElement | null;
+  if (!previousParagraphButton || !nextParagraphButton) {
+    return;
+  }
+
+  const canGoPrevious = Boolean(
+    paragraphNavigationState && paragraphNavigationState.currentParagraphIndex > 0,
+  );
+  const canGoNext = Boolean(
+    paragraphNavigationState
+      && paragraphNavigationState.currentParagraphIndex < paragraphNavigationState.paragraphs.length - 1,
+  );
+
+  previousParagraphButton.disabled = !canGoPrevious;
+  nextParagraphButton.disabled = !canGoNext;
+}
+
+function setParagraphNavigationState(text: string, options: InitTTSOptions): void {
+  const providedParagraphs = (options.paragraphNavigation?.paragraphTexts || [])
+    .map((paragraph) => paragraph.trim())
+    .filter((paragraph) => paragraph.length > 0);
+  const paragraphs = providedParagraphs.length > 0
+    ? providedParagraphs
+    : splitTextIntoParagraphs(text);
+
+  if (paragraphs.length === 0) {
+    paragraphNavigationState = null;
+    return;
+  }
+
+  const requestedStartIndex = Math.round(options.paragraphNavigation?.startParagraphIndex ?? 0);
+  const startParagraphIndex = Math.min(
+    Math.max(requestedStartIndex, 0),
+    paragraphs.length - 1,
+  );
+
+  paragraphNavigationState = {
+    paragraphs,
+    currentParagraphIndex: startParagraphIndex,
+    playbackOptions: {
+      autonomousMode: options.autonomousMode,
+      nextChapterUrl: options.nextChapterUrl ?? null,
+      automationSettings: options.automationSettings,
+    },
+  };
+}
+
+async function moveParagraph(offset: number): Promise<void> {
+  if (!paragraphNavigationState) {
+    return;
+  }
+
+  const targetParagraphIndex = paragraphNavigationState.currentParagraphIndex + offset;
+  if (
+    targetParagraphIndex < 0
+    || targetParagraphIndex >= paragraphNavigationState.paragraphs.length
+  ) {
+    return;
+  }
+
+  const remainingText = paragraphNavigationState.paragraphs
+    .slice(targetParagraphIndex)
+    .join('\n\n');
+  if (!remainingText) {
+    return;
+  }
+
+  await initTTS(remainingText, {
+    autonomousMode: paragraphNavigationState.playbackOptions.autonomousMode,
+    nextChapterUrl: paragraphNavigationState.playbackOptions.nextChapterUrl,
+    automationSettings: paragraphNavigationState.playbackOptions.automationSettings,
+    paragraphNavigation: {
+      paragraphTexts: paragraphNavigationState.paragraphs,
+      startParagraphIndex: targetParagraphIndex,
+    },
+  });
+}
+
+function previousParagraph(): void {
+  void moveParagraph(-1).catch((error) => {
+    console.error('Failed to move to previous paragraph:', error);
+  });
+}
+
+function nextParagraph(): void {
+  void moveParagraph(1).catch((error) => {
+    console.error('Failed to move to next paragraph:', error);
+  });
+}
+
 function updatePlayPauseButton(): void {
   const pauseButton = document.querySelector('#tts-pause');
   if (!pauseButton) {
@@ -217,6 +359,7 @@ function cleanup(preserveAutonomousState = false): void {
     currentTTSDeactivate = null;
   }
 
+  paragraphNavigationState = null;
   if (!preserveAutonomousState) {
     disableAutonomousMode();
   }
@@ -233,6 +376,8 @@ function cleanup(preserveAutonomousState = false): void {
       navigator.mediaSession.setActionHandler('play', null);
       navigator.mediaSession.setActionHandler('pause', null);
       navigator.mediaSession.setActionHandler('stop', null);
+      navigator.mediaSession.setActionHandler('previoustrack', null);
+      navigator.mediaSession.setActionHandler('nexttrack', null);
     } catch {
       // Ignore unsupported mediaSession environments
     }
@@ -280,6 +425,7 @@ export async function initTTS(text: string, options: InitTTSOptions = { autonomo
 
   cleanup();
   configureAutonomousMode(options);
+  setParagraphNavigationState(text, options);
 
   try {
     const settings = await browser.storage.sync.get({
@@ -321,6 +467,8 @@ export async function initTTS(text: string, options: InitTTSOptions = { autonomo
         navigator.mediaSession.setActionHandler('play', () => audioElement?.play());
         navigator.mediaSession.setActionHandler('pause', () => audioElement?.pause());
         navigator.mediaSession.setActionHandler('stop', () => stopPlayback());
+        navigator.mediaSession.setActionHandler('previoustrack', () => previousParagraph());
+        navigator.mediaSession.setActionHandler('nexttrack', () => nextParagraph());
 
         audioElement.onplay = () => {
           if (audioElement) {
@@ -349,6 +497,7 @@ export async function initTTS(text: string, options: InitTTSOptions = { autonomo
       if (controlPanel) {
         updatePanelContent(controlPanel, false);
       }
+        updateParagraphNavigationButtons();
 
       const appendNextChunk = () => {
         if (!isActive || !sourceBuffer || mediaSource.readyState !== 'open') {
@@ -479,6 +628,10 @@ async function startConfiguredPageRead(
     autonomousMode: true,
     nextChapterUrl: extraction.nextChapterUrl,
     automationSettings,
+    paragraphNavigation: {
+      paragraphTexts: extraction.paragraphTexts,
+      startParagraphIndex: extraction.startParagraphIndex,
+    },
   });
 }
 
@@ -547,6 +700,16 @@ async function handleIncomingMessage(request: ExtensionMessage): Promise<void> {
     return;
   }
 
+  if (request.action === 'previousParagraph') {
+    previousParagraph();
+    return;
+  }
+
+  if (request.action === 'nextParagraph') {
+    nextParagraph();
+    return;
+  }
+
   if (request.action === 'readPage') {
     await startConfiguredPageRead({ startFromViewportParagraph: true });
     return;
@@ -580,6 +743,14 @@ window.addEventListener('message', (event) => {
     void startConfiguredPageRead({ startFromViewportParagraph: true }).catch((error) => {
       console.error('triggerReadPage error:', error);
     });
+  }
+
+  if (action === 'triggerPreviousParagraph') {
+    previousParagraph();
+  }
+
+  if (action === 'triggerNextParagraph') {
+    nextParagraph();
   }
 
   if (action === 'triggerTTS' && typeof text === 'string') {

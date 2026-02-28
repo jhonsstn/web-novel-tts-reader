@@ -1,5 +1,5 @@
 import browser from 'webextension-polyfill';
-import { circlePause, circleStop } from '../lib/svgs';
+import { circleArrowLeft, circleArrowRight, circlePause, circleStop } from '../lib/svgs';
 
 export async function createControlPanel(isLoading = true): Promise<HTMLElement> {
 	const settings = await browser.storage.sync.get({
@@ -28,6 +28,10 @@ export function updatePanelContent(panel: HTMLElement, isLoading: boolean): void
 			</div>
 		` : `
 			<div class="etts-flex-center">
+				<button id="tts-prev-paragraph" class="etts-tts-button">
+					${circleArrowLeft}
+					<span>Prev</span>
+				</button>
 				<button id="tts-pause" class="etts-tts-button">
 					${circlePause}
 					<span>Pause</span>
@@ -36,20 +40,38 @@ export function updatePanelContent(panel: HTMLElement, isLoading: boolean): void
 					${circleStop}
 					<span>Stop</span>
 				</button>
+				<button id="tts-next-paragraph" class="etts-tts-button">
+					${circleArrowRight}
+					<span>Next</span>
+				</button>
 			</div>
 		`}
 	`;
 
 	if (!isLoading) {
+		const previousParagraphButton = panel.querySelector('#tts-prev-paragraph');
 		const pauseButton = panel.querySelector('#tts-pause');
 		const stopButton = panel.querySelector('#tts-stop');
+		const nextParagraphButton = panel.querySelector('#tts-next-paragraph');
+
+
+		if (previousParagraphButton) previousParagraphButton.addEventListener('click', () => {
+			(window as any).previousParagraph?.();
+		});
+
 
 		if (pauseButton) pauseButton.addEventListener('click', () => {
 			(window as any).togglePause?.();
 		});
 
+
 		if (stopButton) stopButton.addEventListener('click', () => {
 			(window as any).stopPlayback?.();
+		});
+
+
+		if (nextParagraphButton) nextParagraphButton.addEventListener('click', () => {
+			(window as any).nextParagraph?.();
 		});
 	}
 }
