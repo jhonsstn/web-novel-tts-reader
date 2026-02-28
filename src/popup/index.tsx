@@ -118,7 +118,7 @@ function Popup() {
       >
         {darkMode ? <MoonIcon /> : <SunIcon />}
       </div>
-      <h1 className="text-xl font-bold select-none">Edge TTS Extension</h1>
+      <h1 className="text-xl font-bold select-none">WebNovel Reader</h1>
 
       <div className="mt-4">
 
@@ -144,16 +144,6 @@ function Popup() {
           onChange={(e) => handleCustomVoiceChange(e.target.value)}
         />
       </div>
-      <div className='text-center mt-4 text-base font-light'>
-        Sample voices at{' '}
-        <a
-          href='https://tts.travisvn.com'
-          target='_blank'
-          className='underline'
-        >
-          tts.travisvn.com
-        </a>
-      </div>
       <div className="mt-4">
         <label className="block">Speed: {speed}x</label>
         <input
@@ -167,18 +157,18 @@ function Popup() {
           className="w-full"
         />
       </div>
-      <div className="mt-4 space-y-2">
+      <div className="mt-4 flex flex-row gap-2">
         <button
           onClick={() => handlePlayClick()}
           className="w-full px-4 py-2 bg-blue-500 text-white rounded"
         >
-          Read current page aloud
+          Play
         </button>
         <button
           onClick={() => handleOpenConfiguration()}
           className="w-full px-4 py-2 bg-slate-600 text-white rounded"
         >
-          Open reader configuration
+          Settings
         </button>
       </div>
     </div>
