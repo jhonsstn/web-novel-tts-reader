@@ -17,6 +17,8 @@ import {
   getReaderAutomationSettings,
 } from './utils/domainReaderProfiles';
 import { extractDomainReaderContent } from './utils/domainExtraction';
+import { applyAllReplacementRules, getGlobalReplacementRules } from './utils/wordReplacements';
+import { WordReplacementRule } from './utils/domainReaderProfiles';
 
 const AUTO_READ_SESSION_KEY = 'etts:auto-read-pending';
 const MAX_PENDING_AUTO_READ_AGE_MS = 30 * 60 * 1000;
@@ -58,6 +60,7 @@ interface InitTTSOptions {
   nextChapterUrl?: string | null;
   automationSettings?: ReaderAutomationSettings;
   paragraphNavigation?: ParagraphNavigationConfig;
+  domainReplacementRules?: WordReplacementRule[];
 }
 
 interface PendingAutoReadState {
@@ -516,7 +519,7 @@ export async function initTTS(text: string, options: InitTTSOptions = { autonomo
     ? paragraphNavigationState.paragraphs.slice(playbackParagraphStartIndex)
     : [];
   const playbackParagraphOffsets = buildParagraphStartOffsets(playbackParagraphs);
-  const textToSpeak = playbackParagraphs.length > 0
+  let textToSpeak = playbackParagraphs.length > 0
     ? playbackParagraphs.join('\n\n')
     : text;
   const normalizedTextToSpeak = textToSpeak.toLowerCase();
@@ -552,6 +555,10 @@ export async function initTTS(text: string, options: InitTTSOptions = { autonomo
     });
 
     controlPanel = await createControlPanel(true);
+
+    const globalReplacementRules = await getGlobalReplacementRules();
+    const domainReplacementRules = options.domainReplacementRules ?? [];
+    textToSpeak = applyAllReplacementRules(textToSpeak, globalReplacementRules, domainReplacementRules);
 
     const voiceName = (settings.customVoice as string) || (settings.voiceName as string);
     const speedPercent = Math.round(((settings.speed as number) - 1) * 100);
@@ -792,6 +799,7 @@ async function startConfiguredPageRead(
     autonomousMode: true,
     nextChapterUrl: extraction.nextChapterUrl,
     automationSettings,
+    domainReplacementRules: profile.replacements ?? [],
     paragraphNavigation: {
       paragraphTexts: extraction.paragraphTexts,
       paragraphElements: extraction.paragraphElements,
@@ -806,7 +814,7 @@ async function startSelectedTextRead(selectedText: string): Promise<void> {
     return;
   }
 
-  await initTTS(selectedText, { autonomousMode: false });
+  await initTTS(selectedText, { autonomousMode: false, domainReplacementRules: profile.replacements ?? [] });
 }
 
 async function startReadFromHere(selectedText: string): Promise<void> {
@@ -832,7 +840,7 @@ async function startReadFromHere(selectedText: string): Promise<void> {
     return;
   }
 
-  await initTTS(textToRead, { autonomousMode: false });
+  await initTTS(textToRead, { autonomousMode: false, domainReplacementRules: profile.replacements ?? [] });
 }
 
 async function maybeStartPendingAutoRead(): Promise<void> {

@@ -1,10 +1,19 @@
 import browser from 'webextension-polyfill';
 
+export interface WordReplacementRule {
+  id: string;
+  pattern: string;
+  isRegex: boolean;
+  replacement: string;
+  enabled: boolean;
+}
+
 export interface DomainReaderProfile {
   domain: string;
   titleSelector: string;
   contentSelector: string;
   nextSelector: string;
+  replacements?: WordReplacementRule[];
 }
 
 export interface ReaderAutomationSettings {
@@ -68,6 +77,7 @@ export function sanitizeDomainReaderProfile(profile: DomainReaderProfile): Domai
     titleSelector: profile.titleSelector.trim(),
     contentSelector: profile.contentSelector.trim(),
     nextSelector: profile.nextSelector.trim(),
+    ...(profile.replacements ? { replacements: profile.replacements } : {}),
   };
 }
 
