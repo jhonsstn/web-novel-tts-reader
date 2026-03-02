@@ -598,7 +598,7 @@ function OptionsPage() {
 
           {hasProfiles && (
             <>
-              <div className="mt-4 flex gap-1 overflow-x-auto border-b border-slate-300 pb-0 dark:border-slate-700">
+              <div className="mt-4 flex gap-1 overflow-x-auto pb-0">
                 {profiles.map((profile, index) => (
                   <button
                     key={index}
@@ -615,7 +615,7 @@ function OptionsPage() {
               </div>
 
               {profiles[activeProfileIndex] && (
-                <article className={`mt-4 ${profileCardClass}`}>
+                <article className="rounded-b-lg rounded-tr-lg border border-slate-300/80 bg-white/95 p-4 shadow-sm dark:border-slate-700 dark:bg-slate-800/70">
                   <div className="grid gap-3">
                     <label className={labelClass}>
                       Domain
