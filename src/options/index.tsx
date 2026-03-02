@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import browser from 'webextension-polyfill';
 import './styles.css';
@@ -78,10 +78,12 @@ function validateProfiles(profiles: DomainReaderProfile[]): string | null {
 
 function OptionsPage() {
   const [profiles, setProfiles] = useState<DomainReaderProfile[]>([]);
+  const [activeProfileIndex, setActiveProfileIndex] = useState(0);
   const [navigationDelaySeconds, setNavigationDelaySeconds] = useState('1');
   const [readStartDelaySeconds, setReadStartDelaySeconds] = useState('1');
   const [saveState, setSaveState] = useState<SaveState>({ type: 'idle', message: '' });
   const [isLoading, setIsLoading] = useState(true);
+  const importInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     (async () => {
@@ -138,11 +140,61 @@ function OptionsPage() {
   };
 
   const addProfile = () => {
-    setProfiles((current) => [...current, { ...EMPTY_PROFILE }]);
+    setProfiles((current) => {
+      setActiveProfileIndex(current.length);
+      return [...current, { ...EMPTY_PROFILE }];
+    });
   };
 
   const removeProfile = (index: number) => {
-    setProfiles((current) => current.filter((_, profileIndex) => profileIndex !== index));
+    setProfiles((current) => {
+      const next = current.filter((_, i) => i !== index);
+      setActiveProfileIndex((prev) => {
+        if (next.length === 0) return 0;
+        if (prev >= next.length) return next.length - 1;
+        return prev;
+      });
+      return next;
+    });
+  };
+
+  const exportProfiles = () => {
+    const json = JSON.stringify(profiles, null, 2);
+    const blob = new Blob([json], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'domain-profiles.json';
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const importProfiles = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      try {
+        const parsed = JSON.parse(reader.result as string);
+        if (!Array.isArray(parsed) || !parsed.every((p: unknown) =>
+          typeof p === 'object' && p !== null &&
+          'domain' in p && 'titleSelector' in p &&
+          'contentSelector' in p && 'nextSelector' in p
+        )) {
+          setSaveState({ type: 'error', message: 'Invalid profile format. Expected array of {domain, titleSelector, contentSelector, nextSelector}.' });
+          return;
+        }
+        setProfiles(parsed as DomainReaderProfile[]);
+        setActiveProfileIndex(0);
+        setSaveState({ type: 'success', message: `Imported ${parsed.length} profile(s). Click "Save Profiles" to persist.` });
+      } catch {
+        setSaveState({ type: 'error', message: 'Failed to parse JSON file.' });
+      }
+    };
+    reader.readAsText(file);
+    // Reset so the same file can be re-imported
+    event.target.value = '';
   };
 
   const saveProfiles = async () => {
@@ -251,12 +303,12 @@ function OptionsPage() {
         <section className={sectionClass}>
           <div className="flex items-center justify-between">
             <h2 className={sectionTitleClass}>Domain Profiles</h2>
-            <button
-              onClick={addProfile}
-              className={addButtonClass}
-            >
-              Add Profile
-            </button>
+            <div className="flex gap-2">
+              <button onClick={exportProfiles} className={addButtonClass}>Export</button>
+              <button onClick={() => importInputRef.current?.click()} className={addButtonClass}>Import</button>
+              <input ref={importInputRef} type="file" accept=".json" onChange={importProfiles} className="hidden" />
+              <button onClick={addProfile} className={addButtonClass}>Add Profile</button>
+            </div>
           </div>
 
           {!hasProfiles && (
@@ -265,66 +317,84 @@ function OptionsPage() {
             </p>
           )}
 
-          <div className="mt-4 space-y-4">
-            {profiles.map((profile, index) => (
-              <article key={`${profile.domain}-${index}`} className={profileCardClass}>
-                <div className="grid gap-3">
-                  <label className={labelClass}>
-                    Domain
-                    <input
-                      type="text"
-                      value={profile.domain}
-                      onChange={(event) => updateProfileField(index, 'domain', event.target.value)}
-                      placeholder="allnovel.org"
-                      className={inputClass}
-                    />
-                  </label>
-
-                  <label className={labelClass}>
-                    Title selector
-                    <input
-                      type="text"
-                      value={profile.titleSelector}
-                      onChange={(event) => updateProfileField(index, 'titleSelector', event.target.value)}
-                      placeholder=".chapter-title .chapter-text"
-                      className={inputClass}
-                    />
-                  </label>
-
-                  <label className={labelClass}>
-                    Content selector
-                    <input
-                      type="text"
-                      value={profile.contentSelector}
-                      onChange={(event) => updateProfileField(index, 'contentSelector', event.target.value)}
-                      placeholder="#chapter-content"
-                      className={inputClass}
-                    />
-                  </label>
-
-                  <label className={labelClass}>
-                    Next chapter selector
-                    <input
-                      type="text"
-                      value={profile.nextSelector}
-                      onChange={(event) => updateProfileField(index, 'nextSelector', event.target.value)}
-                      placeholder="#next_chap"
-                      className={inputClass}
-                    />
-                  </label>
-                </div>
-
-                <div className="mt-3">
+          {hasProfiles && (
+            <>
+              <div className="mt-4 flex gap-1 overflow-x-auto border-b border-slate-300 pb-0 dark:border-slate-700">
+                {profiles.map((profile, index) => (
                   <button
-                    onClick={() => removeProfile(index)}
-                    className={deleteButtonClass}
+                    key={index}
+                    onClick={() => setActiveProfileIndex(index)}
+                    className={`shrink-0 rounded-t-md border border-b-0 px-3 py-2 text-sm font-medium transition ${
+                      index === activeProfileIndex
+                        ? 'border-slate-300 bg-white text-indigo-600 dark:border-slate-700 dark:bg-slate-800 dark:text-indigo-400'
+                        : 'border-transparent text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200'
+                    }`}
                   >
-                    Delete Profile
+                    {profile.domain.trim() || 'New profile'}
                   </button>
-                </div>
-              </article>
-            ))}
-          </div>
+                ))}
+              </div>
+
+              {profiles[activeProfileIndex] && (
+                <article className={`mt-4 ${profileCardClass}`}>
+                  <div className="grid gap-3">
+                    <label className={labelClass}>
+                      Domain
+                      <input
+                        type="text"
+                        value={profiles[activeProfileIndex].domain}
+                        onChange={(event) => updateProfileField(activeProfileIndex, 'domain', event.target.value)}
+                        placeholder="allnovel.org"
+                        className={inputClass}
+                      />
+                    </label>
+
+                    <label className={labelClass}>
+                      Title selector
+                      <input
+                        type="text"
+                        value={profiles[activeProfileIndex].titleSelector}
+                        onChange={(event) => updateProfileField(activeProfileIndex, 'titleSelector', event.target.value)}
+                        placeholder=".chapter-title .chapter-text"
+                        className={inputClass}
+                      />
+                    </label>
+
+                    <label className={labelClass}>
+                      Content selector
+                      <input
+                        type="text"
+                        value={profiles[activeProfileIndex].contentSelector}
+                        onChange={(event) => updateProfileField(activeProfileIndex, 'contentSelector', event.target.value)}
+                        placeholder="#chapter-content"
+                        className={inputClass}
+                      />
+                    </label>
+
+                    <label className={labelClass}>
+                      Next chapter selector
+                      <input
+                        type="text"
+                        value={profiles[activeProfileIndex].nextSelector}
+                        onChange={(event) => updateProfileField(activeProfileIndex, 'nextSelector', event.target.value)}
+                        placeholder="#next_chap"
+                        className={inputClass}
+                      />
+                    </label>
+                  </div>
+
+                  <div className="mt-3">
+                    <button
+                      onClick={() => removeProfile(activeProfileIndex)}
+                      className={deleteButtonClass}
+                    >
+                      Delete Profile
+                    </button>
+                  </div>
+                </article>
+              )}
+            </>
+          )}
 
           <button
             onClick={saveProfiles}
