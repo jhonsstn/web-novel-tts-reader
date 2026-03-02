@@ -267,9 +267,14 @@ function highlightCurrentParagraph(): void {
   highlightedParagraphElement = paragraphElement;
 
   if (paragraphElement instanceof HTMLElement) {
+    const rect = paragraphElement.getBoundingClientRect();
+    const viewportHeight = window.innerHeight;
+    const isNearBottom = rect.top > viewportHeight * 0.7;
+    const isOffScreen = rect.bottom < 0 || rect.top > viewportHeight;
+
     paragraphElement.scrollIntoView({
       behavior: 'smooth',
-      block: 'nearest',
+      block: (isNearBottom || isOffScreen) ? 'start' : 'nearest',
       inline: 'nearest',
     });
   }
